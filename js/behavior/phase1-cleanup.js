@@ -1,7 +1,9 @@
 /*
   Фаза 1 — только Недвижимость.
-  Скрывает лишние элементы, перестраивает навигацию.
-  Мобильный хедер: город + лупа → поиск (раскрывается) → 4 кнопки с иконками.
+  Скрывает: вкладки Топ / Лента / Мой двор, кнопку «Карточки»,
+  гамбургер-меню, фильтры «Районы» и «Риелторы»,
+  лишние категории в сайдбаре, блок «Быстрый старт».
+  Перемещает фильтры в верхнюю панель.
 */
 (function phase1Cleanup() {
   'use strict';
@@ -10,17 +12,16 @@
   var HIDE_TABS = ['Топ', 'Лента', 'Мой двор'];
   var HIDE_FILTERS = ['Районы', 'Риелторы'];
   var MOVED_MARKER = 'kliper-pills-moved';
-  var MOBILE_MARKER = 'kliper-mobile-nav-built';
   var STYLE_ID = 'kliper-phase1-styles';
 
   var PILLS = [
-    { label: 'Застройщики', short: 'Застр.', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="8" width="7" height="13" rx="1"/><line x1="6" y1="7" x2="6" y2="7.01"/><line x1="6" y1="11" x2="6" y2="11.01"/><line x1="6" y1="15" x2="6" y2="15.01"/><line x1="17" y1="12" x2="17" y2="12.01"/><line x1="17" y1="16" x2="17" y2="16.01"/></svg>' },
-    { label: 'Новостройки', short: 'Новые', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 22 2 22 2 8.5"/><polyline points="9 22 9 14 15 14 15 22"/></svg>' },
-    { label: 'Готовые ЖК', short: 'Готовые', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' },
-    { label: 'Для бизнеса', short: 'Бизнес', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' }
+    { label: 'Застройщики', short: 'Застр.', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="8" width="7" height="13" rx="1"/></svg>' },
+    { label: 'Новостройки', short: 'Новые', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 22 8.5 22 22 2 22 2 8.5"/><polyline points="9 22 9 14 15 14 15 22"/></svg>' },
+    { label: 'Готовые ЖК', short: 'Готовые', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' },
+    { label: 'Для бизнеса', short: 'Бизнес', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' }
   ];
 
-  var SEARCH_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+  var SEARCH_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 
   function hide(el) {
     if (el && el.style.display !== 'none') el.style.display = 'none';
@@ -31,97 +32,28 @@
     var s = document.createElement('style');
     s.id = STYLE_ID;
     s.textContent = [
-      /* Desktop top bar */
-      '.kliper-phase1-topbar {',
-      '  display: grid; grid-template-columns: auto auto minmax(280px, 1fr);',
-      '  align-items: center; gap: 12px;',
-      '}',
-      '.kliper-pills-moved {',
-      '  display: flex; align-items: center; gap: 4px; padding: 3px;',
-      '  border-radius: 10px; background: rgba(255,255,255,0.1);',
-      '  overflow-x: auto; -webkit-overflow-scrolling: touch;',
-      '  scrollbar-width: none;',
-      '}',
+      '.kliper-phase1-topbar { display: grid; grid-template-columns: auto auto minmax(280px, 1fr); align-items: center; gap: 12px; }',
+      '.kliper-pills-moved { display: flex; align-items: center; gap: 4px; padding: 3px; border-radius: 10px; background: rgba(255,255,255,0.1); overflow-x: auto; scrollbar-width: none; }',
       '.kliper-pills-moved::-webkit-scrollbar { display: none; }',
-      '.kliper-pill-btn {',
-      '  white-space: nowrap; padding: 7px 14px; border-radius: 8px;',
-      '  font-size: 13px; font-weight: 800; font-family: Manrope, sans-serif;',
-      '  color: rgba(255,255,255,0.65); background: transparent;',
-      '  border: none; cursor: pointer; transition: all 0.2s;',
-      '  -webkit-tap-highlight-color: transparent;',
-      '}',
+      '.kliper-pill-btn { white-space: nowrap; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 800; font-family: Manrope, sans-serif; color: rgba(255,255,255,0.65); background: transparent; border: none; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }',
       '.kliper-pill-btn:hover { color: rgba(255,255,255,0.9); }',
-      '.kliper-pill-btn.active {',
-      '  background: linear-gradient(135deg, #7c3aed, #6d28d9);',
-      '  color: #fff; box-shadow: 0 4px 12px rgba(109,40,217,0.35);',
-      '}',
-
-      /* Mobile: hide desktop pills and search */
-      '@media (max-width: 767px) {',
-      '  .kliper-phase1-topbar { display: none !important; }',
-      '  .kliper-mobile-nav { display: flex !important; }',
-      '}',
-      '@media (min-width: 768px) {',
-      '  .kliper-mobile-nav { display: none !important; }',
-      '}',
-
-      /* Mobile nav */
-      '.kliper-mobile-nav {',
-      '  flex-direction: column; gap: 0; padding: 0;',
-      '}',
-      '.kliper-mob-row1 {',
-      '  display: flex; align-items: center; justify-content: space-between;',
-      '  padding: 10px 14px;',
-      '}',
-      '.kliper-mob-search-toggle {',
-      '  display: flex; align-items: center; justify-content: center;',
-      '  width: 42px; height: 42px; border-radius: 10px;',
-      '  background: rgba(255,255,255,0.1); border: none;',
-      '  color: #fff; cursor: pointer; transition: all 0.2s;',
-      '  -webkit-tap-highlight-color: transparent;',
-      '}',
+      '.kliper-pill-btn.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; box-shadow: 0 4px 12px rgba(109,40,217,0.35); }',
+      '@media (max-width: 767px) { .kliper-phase1-topbar { display: none !important; } .kliper-mobile-nav { display: flex !important; } }',
+      '@media (min-width: 768px) { .kliper-mobile-nav { display: none !important; } }',
+      '.kliper-mobile-nav { flex-direction: column; gap: 0; padding: 0; }',
+      '.kliper-mob-row1 { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; }',
+      '.kliper-mob-search-toggle { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.1); border: none; color: #fff; cursor: pointer; transition: all 0.2s; }',
       '.kliper-mob-search-toggle.open { background: rgba(124,58,237,0.5); }',
-      '.kliper-mob-search-row {',
-      '  overflow: hidden; transition: max-height 0.25s ease, opacity 0.25s ease, padding 0.25s ease;',
-      '  max-height: 0; opacity: 0; padding: 0 14px;',
-      '}',
-      '.kliper-mob-search-row.open {',
-      '  max-height: 60px; opacity: 1; padding: 0 14px 8px;',
-      '}',
-      '.kliper-mob-search-input {',
-      '  width: 100%; height: 40px; border-radius: 10px;',
-      '  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);',
-      '  color: #fff; padding: 0 14px; font-size: 14px; font-weight: 600;',
-      '  font-family: Manrope, sans-serif; outline: none;',
-      '}',
+      '.kliper-mob-search-row { overflow: hidden; transition: max-height 0.25s ease, opacity 0.25s ease, padding 0.25s ease; max-height: 0; opacity: 0; padding: 0 14px; }',
+      '.kliper-mob-search-row.open { max-height: 60px; opacity: 1; padding: 0 14px 8px; }',
+      '.kliper-mob-search-input { width: 100%; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 0 14px; font-size: 14px; font-weight: 600; font-family: Manrope, sans-serif; outline: none; }',
       '.kliper-mob-search-input::placeholder { color: rgba(255,255,255,0.4); }',
       '.kliper-mob-search-input:focus { border-color: rgba(124,58,237,0.6); }',
-
-      /* Mobile pill buttons */
-      '.kliper-mob-pills {',
-      '  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;',
-      '  padding: 6px 14px 12px;',
-      '}',
-      '.kliper-mob-pill {',
-      '  display: flex; align-items: center; justify-content: center; gap: 6px;',
-      '  padding: 8px 4px; border-radius: 10px; border: none;',
-      '  font-size: 12px; font-weight: 800; font-family: Manrope, sans-serif;',
-      '  color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.06);',
-      '  cursor: pointer; transition: all 0.2s; white-space: nowrap;',
-      '  overflow: hidden; -webkit-tap-highlight-color: transparent;',
-      '}',
-      '.kliper-mob-pill.active {',
-      '  background: linear-gradient(135deg, #7c3aed, #6d28d9);',
-      '  color: #fff; box-shadow: 0 4px 12px rgba(109,40,217,0.3);',
-      '}',
+      '.kliper-mob-pills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 6px 14px 12px; }',
+      '.kliper-mob-pill { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 8px 4px; border-radius: 10px; border: none; font-size: 11px; font-weight: 800; font-family: Manrope, sans-serif; color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.06); cursor: pointer; transition: all 0.2s; white-space: nowrap; overflow: hidden; -webkit-tap-highlight-color: transparent; }',
+      '.kliper-mob-pill.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; box-shadow: 0 4px 12px rgba(109,40,217,0.3); }',
       '.kliper-mob-pill svg { flex-shrink: 0; }',
-      '.kliper-mob-pill-label {',
-      '  transition: max-width 0.25s ease, opacity 0.25s ease;',
-      '}',
-      '@media (max-width: 359px) {',
-      '  .kliper-mob-pill-label { display: none; }',
-      '  .kliper-mob-pill { padding: 10px; justify-content: center; }',
-      '}'
+      '@media (max-width: 359px) { .kliper-mob-pill span { display: none; } .kliper-mob-pill { padding: 10px; } }'
     ].join('\n');
     document.head.appendChild(s);
   }
@@ -141,8 +73,7 @@
   }
 
   function cleanHamburger() {
-    var allBtns = document.querySelectorAll('button');
-    allBtns.forEach(function (btn) {
+    document.querySelectorAll('button').forEach(function (btn) {
       var cls = btn.className || '';
       if (cls.indexOf('shrink-0') !== -1 && cls.indexOf('bg-white') !== -1) {
         var rect = btn.getBoundingClientRect();
@@ -176,13 +107,14 @@
   function findOriginalPillByText(text) {
     var allBtns = document.querySelectorAll('button.flex.h-9');
     for (var i = 0; i < allBtns.length; i++) {
-      if (allBtns[i].textContent.trim() === text && !allBtns[i].closest('.' + MOVED_MARKER) && !allBtns[i].closest('.kliper-mobile-nav')) return allBtns[i];
+      if (allBtns[i].textContent.trim() === text &&
+          !allBtns[i].closest('.' + MOVED_MARKER) &&
+          !allBtns[i].closest('.kliper-mobile-nav')) return allBtns[i];
     }
     return null;
   }
 
   function syncActiveState() {
-    // Desktop pills
     var clone = document.querySelector('.' + MOVED_MARKER);
     if (clone) {
       clone.querySelectorAll('.kliper-pill-btn').forEach(function (cb) {
@@ -193,7 +125,6 @@
         }
       });
     }
-    // Mobile pills
     var mobNav = document.querySelector('.kliper-mobile-nav');
     if (mobNav) {
       mobNav.querySelectorAll('.kliper-mob-pill').forEach(function (mb) {
@@ -207,7 +138,6 @@
     }
   }
 
-  /* Desktop pills */
   function movePillsToTopBar() {
     if (document.querySelector('.' + MOVED_MARKER)) { syncActiveState(); return; }
 
@@ -242,7 +172,6 @@
     setTimeout(syncActiveState, 50);
   }
 
-  /* Mobile nav */
   function buildMobileNav() {
     if (document.querySelector('.kliper-mobile-nav')) { syncActiveState(); return; }
 
@@ -253,26 +182,22 @@
     var darkBar = topBarGrid.parentElement;
     if (!darkBar) return;
 
-    // Find original city button (may be hidden on mobile)
+    var cityName = (window.KLIPER_SITE_CONFIG && window.KLIPER_SITE_CONFIG.cities && window.KLIPER_SITE_CONFIG.cities[0]) || 'Тюмень';
     var origCityBtn = document.querySelector('button[class*="min-w-[164px]"]') ||
-      [...document.querySelectorAll('button')].find(function(b) {
+      Array.prototype.find.call(document.querySelectorAll('button'), function(b) {
         return b.textContent.trim().indexOf('Тюмень') !== -1 && b.className.indexOf('inline-flex') !== -1;
       });
-    var cityName = (window.KLIPER_SITE_CONFIG && window.KLIPER_SITE_CONFIG.cities && window.KLIPER_SITE_CONFIG.cities[0]) || 'Тюмень';
 
     var nav = document.createElement('div');
     nav.className = 'kliper-mobile-nav';
 
-    // Row 1: city + search icon
     var row1 = document.createElement('div');
     row1.className = 'kliper-mob-row1';
 
     var cityClone = document.createElement('button');
-    cityClone.style.cssText = 'display:flex; align-items:center; gap:6px; color:#fff; font-weight:800; font-size:15px; font-family:Manrope,sans-serif; background:none; border:none; cursor:pointer; padding:0;';
+    cityClone.style.cssText = 'display:flex;align-items:center;gap:6px;color:#fff;font-weight:800;font-size:15px;font-family:Manrope,sans-serif;background:none;border:none;cursor:pointer;padding:0;';
     cityClone.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ' + cityName + ' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>';
-    cityClone.addEventListener('click', function () {
-      if (origCityBtn) origCityBtn.click();
-    });
+    cityClone.addEventListener('click', function () { if (origCityBtn) origCityBtn.click(); });
 
     var searchToggle = document.createElement('button');
     searchToggle.className = 'kliper-mob-search-toggle';
@@ -281,7 +206,6 @@
     row1.appendChild(cityClone);
     row1.appendChild(searchToggle);
 
-    // Row 2: search input (hidden by default)
     var searchRow = document.createElement('div');
     searchRow.className = 'kliper-mob-search-row';
     var searchField = document.createElement('input');
@@ -296,7 +220,6 @@
       if (isOpen) searchField.focus();
     });
 
-    // Sync typed text with original search
     searchField.addEventListener('input', function () {
       if (searchInput) {
         var nativeSet = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
@@ -305,7 +228,6 @@
       }
     });
 
-    // Row 3: pill buttons with icons
     var pillRow = document.createElement('div');
     pillRow.className = 'kliper-mob-pills';
 
@@ -313,7 +235,7 @@
       var btn = document.createElement('button');
       btn.className = 'kliper-mob-pill';
       btn.setAttribute('data-label', p.label);
-      btn.innerHTML = p.icon + '<span class="kliper-mob-pill-label">' + p.short + '</span>';
+      btn.innerHTML = p.icon + '<span>' + p.short + '</span>';
       btn.addEventListener('click', function () {
         var orig = findOriginalPillByText(p.label);
         if (orig) orig.click();
@@ -324,7 +246,6 @@
     nav.appendChild(row1);
     nav.appendChild(searchRow);
     nav.appendChild(pillRow);
-
     darkBar.appendChild(nav);
     setTimeout(syncActiveState, 50);
   }
@@ -333,14 +254,11 @@
     document.querySelectorAll('.fixed.inset-0').forEach(function (sidebar) {
       var scrollPane = sidebar.querySelector('[class*="overflow-y-auto"]');
       if (!scrollPane) return;
-
       var groupsContainer = scrollPane.querySelector('.space-y-3');
       if (groupsContainer) {
         for (var i = 0; i < groupsContainer.children.length; i++) {
           var label = groupsContainer.children[i].querySelector('p');
-          if (label && KEEP_GROUPS.indexOf(label.textContent.trim()) === -1) {
-            hide(groupsContainer.children[i]);
-          }
+          if (label && KEEP_GROUPS.indexOf(label.textContent.trim()) === -1) hide(groupsContainer.children[i]);
         }
       }
       scrollPane.querySelectorAll('p').forEach(function (p) {

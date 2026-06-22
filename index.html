@@ -1,30 +1,33 @@
 <!doctype html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Клипер.Сити</title>
-    <link rel="icon" type="image/svg+xml" href="./assets/logos/kliper-logo-site.svg">
-    <link rel="alternate icon" type="image/png" href="./assets/logos/kliper-city-logo-3.png">
-    <link rel="apple-touch-icon" href="./assets/logos/kliper-city-logo-3.png">
-    <script>
-      try {
-        if (localStorage.getItem('kliper-theme') === 'dark') {
-          document.documentElement.classList.add('kliper-dark-theme');
-        }
-      } catch (e) {}
-    </script>
-    <link rel="stylesheet" href="./css/style.css?v=migration-1" />
-    <link rel="stylesheet" href="./css/catalog.css?v=migration-1" />
-    <script src="./js/data/site-config.js?v=migration-1"></script>
-    <script src="./js/data/navigation.js?v=migration-1"></script>
-    <script src="./js/data/contacts.js?v=migration-1"></script>
-    <script src="./js/data/content-labels.js?v=migration-1"></script>
-    <script src="./js/data/tyumen-districts.js?v=migration-1"></script>
-    <script src="./js/data/developers.js?v=migration-1"></script>
-    <script src="./js/data/buildings.js?v=migration-1"></script>
-    <script src="./js/data/stories.js?v=migration-1"></script>
-    <script src="./js/data/filters.js?v=migration-1"></script>
+   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Клипер.Сити</title>
+
+  <link rel="icon" type="image/svg+xml" href="./assets/logos/kliper-logo-site.svg">
+  <link rel="alternate icon" type="image/png" href="./assets/logos/kliper-city-logo-3.png">
+  <link rel="apple-touch-icon" href="./assets/logos/kliper-city-logo-3.png">
+
+  <script>
+    try {
+      if (localStorage.getItem('kliper-theme') === 'dark') {
+        document.documentElement.classList.add('kliper-dark-theme');
+      }
+      if (window.location.hash.indexOf('card=') !== -1) {
+        document.documentElement.classList.add('kliper-page-restoring');
+      }
+    } catch (error) {}
+  </script>
+  <link rel="stylesheet" href="./css/style.css?v=filter-drawers-soft-2" />
+  <link rel="stylesheet" href="./css/my-yard.css?v=my-yard-page-3" />
+    <script src="./js/data/site-config.js?v=content-data-1"></script>
+    <script src="./js/data/navigation.js?v=content-data-1"></script>
+    <script src="./js/data/contacts.js?v=content-data-1"></script>
+    <script src="./js/data/content-labels.js?v=content-data-1"></script>
+    <script src="./js/shared/dom-utils.js?v=component-utils-1"></script>
+    <script src="./js/data/tyumen-districts.js?v=tyumen-districts-1"></script>
   </head>
   <body>
     <script>
@@ -32,275 +35,35 @@
         if (document.documentElement.classList.contains('kliper-dark-theme')) {
           document.body.classList.add('kliper-dark-theme');
         }
-      } catch (e) {}
+      } catch (error) {}
     </script>
-
-    <div id="kliper-app" class="mx-auto max-w-[1400px] px-4 pb-10 pt-4 sm:px-6">
-
-      <!-- Header -->
-      <header class="mb-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <img src="./assets/logos/kliper-logo-site.svg" alt="Клипер.Сити" class="h-9 w-9">
-          <div>
-            <div class="text-lg font-black tracking-tight text-slate-950">Клипер.Сити</div>
-            <div class="text-[10px] font-bold text-slate-400">Городская соцсеть</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="kliper-theme-toggle" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200" aria-label="Переключить тему">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          </button>
-          <button class="flex h-10 items-center gap-2 rounded-full bg-slate-100 px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-200">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Мария
-          </button>
-        </div>
-      </header>
-
-      <!-- Stories Bar -->
-      <nav id="kliper-stories" class="kliper-stories mb-4"></nav>
-
-      <!-- Top Navigation Bar -->
-      <div class="kliper-topbar">
-        <!-- Desktop -->
-        <div class="kliper-topbar-grid">
-          <button class="kliper-city-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Тюмень
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="kliper-pills">
-            <button class="kliper-pill active" data-view="developers">Застройщики</button>
-            <button class="kliper-pill" data-view="novostroyki">Новостройки</button>
-            <button class="kliper-pill" data-view="gotovye">Готовые ЖК</button>
-            <button class="kliper-pill" data-view="business">Для бизнеса</button>
-          </div>
-          <div class="kliper-search">
-            <span class="kliper-search-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </span>
-            <input type="text" class="kliper-search-input" placeholder="Поиск: новостройки...">
-          </div>
-        </div>
-
-        <!-- Mobile -->
-        <div class="kliper-mobile-nav">
-          <div class="kliper-mob-row1">
-            <button class="kliper-mob-city">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Тюмень
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <button class="kliper-mob-search-toggle" id="kliper-mob-search-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-          </div>
-          <div class="kliper-mob-search-row" id="kliper-mob-search-row">
-            <input type="text" class="kliper-mob-search-input" placeholder="Поиск: новостройки...">
-          </div>
-          <div class="kliper-mob-pills">
-            <button class="kliper-mob-pill active" data-view="developers">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="8" width="7" height="13" rx="1"/></svg>
-              <span>Застр.</span>
-            </button>
-            <button class="kliper-mob-pill" data-view="novostroyki">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 22 8.5 22 22 2 22 2 8.5"/><polyline points="9 22 9 14 15 14 15 22"/></svg>
-              <span>Новые</span>
-            </button>
-            <button class="kliper-mob-pill" data-view="gotovye">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              <span>Готовые</span>
-            </button>
-            <button class="kliper-mob-pill" data-view="business">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-              <span>Бизнес</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Grid Header -->
-      <div class="kliper-grid-header">
-        <span id="kliper-card-count" class="kliper-grid-count">32 карточек</span>
-        <div class="kliper-grid-views">
-          <button class="kliper-grid-view-btn active" aria-label="Сетка">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          </button>
-          <button class="kliper-grid-view-btn" aria-label="Список">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          </button>
-          <button class="kliper-grid-view-btn" aria-label="Люди">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </button>
-          <button class="kliper-grid-view-btn" aria-label="График">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Card Grid -->
-      <div id="kliper-cards" class="kliper-card-grid"></div>
-
-    </div>
-
-    <!-- Scripts -->
-    <script src="./js/shared/dom-utils.js?v=migration-1"></script>
-    <script src="./js/catalog/developer-cards.js?v=migration-2"></script>
-    <script src="./js/catalog/building-cards.js?v=migration-2"></script>
-    <script src="./js/behavior/hash-router.js?v=migration-2"></script>
+    <div id="root"></div>
+  <script defer src="./js/app.js?v=districts-clean-filter-1"></script>
+    <script defer src="./js/behavior/phase1-cleanup.js?v=phase1-restore-1"></script>
+    <script defer src="./js/pages/my-yard/my-yard-page.js?v=my-yard-page-3"></script>
+    <script defer src="./js/behavior/dark-theme-toggle.js?v=dark-theme-toggle-4"></script>
+    <script defer src="./js/behavior/mobile-search-toggle.js?v=mobile-feed-search-3"></script>
+    <script defer src="./js/filters/feed-mobile-filters.js?v=feed-mobile-filters-8"></script>
+  <script defer src="./js/catalog/developer-card-badges.js?v=developer-card-status-badges-2"></script>
+    <script defer src="./js/pages/object/object-plans-block.js?v=plans-webp-type-map-1"></script>
+    <script defer src="./js/pages/object/object-aerial-view-block.js?v=map-preview-click-1"></script>
+    <script defer src="./js/pages/object/object-map-location-block.js?v=map-preview-click-1"></script>
+    <script defer src="./js/pages/object/object-gallery-block.js?v=plan-gallery-cycle-1"></script>
+    <script defer src="./js/pages/object/object-hero-compact.js?v=developer-objects-restored-14"></script>
+    <script defer src="./js/pages/object/developer-passport-hide.js?v=developer-react-safe-nav-1"></script>
+    <script defer src="./js/pages/object/developer-section-tabs.js?v=developer-page-scope-2"></script>
+    <script defer src="./js/pages/object/sidebar-list-modals.js?v=developer-objects-restored-14"></script>
+    <script defer src="./js/pages/object/developer-reviews-polish.js?v=jk-reviews-card-polish-1"></script>
+    <script defer src="./js/pages/object/developer-object-tabs-polish.js?v=developer-objects-heading-hide-1"></script>
+    <script defer src="./js/pages/object/ecosystem-card-polish.js?v=jk-stories-format-1"></script>
+    <script defer src="./js/pages/object/object-section-tabs.js?v=object-page-cleanup-2"></script>
+    <script defer src="./js/filters/top-mobile-filters.js?v=top-food-default-1"></script>
     <script>
-      // Stories renderer with story viewer
-      (function () {
-        var stories = window.KLIPER_STORIES || [];
-        var container = document.getElementById('kliper-stories');
-        if (!container || !stories.length) return;
-        var html = '';
-        for (var i = 0; i < stories.length; i++) {
-          var s = stories[i];
-          html += '<div class="kliper-story" data-story-idx="' + i + '">' +
-            '<div class="kliper-story-ring"><div class="kliper-story-ring-inner">' +
-            '<img src="' + s.image + '" alt="' + s.name + '" loading="lazy">' +
-            '</div></div>' +
-            '<span class="kliper-story-name">' + s.name + '</span>' +
-          '</div>';
-        }
-        container.innerHTML = html;
-
-        // Story viewer modal
-        container.addEventListener('click', function (e) {
-          var story = e.target.closest('.kliper-story');
-          if (!story) return;
-          var idx = parseInt(story.getAttribute('data-story-idx'));
-          var s = stories[idx];
-          if (!s) return;
-          openStoryViewer(idx);
-        });
-
-        function openStoryViewer(idx) {
-          var existing = document.getElementById('kliper-story-viewer');
-          if (existing) existing.remove();
-
-          var s = stories[idx];
-          var overlay = document.createElement('div');
-          overlay.id = 'kliper-story-viewer';
-          overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;';
-
-          var inner = document.createElement('div');
-          inner.style.cssText = 'position:relative;max-width:420px;width:90%;max-height:80vh;border-radius:20px;overflow:hidden;';
-
-          var img = document.createElement('img');
-          img.src = s.image;
-          img.alt = s.name;
-          img.style.cssText = 'width:100%;height:auto;display:block;border-radius:20px;';
-
-          var label = document.createElement('div');
-          label.style.cssText = 'position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,0.7));color:#fff;font-weight:800;font-size:18px;border-radius:0 0 20px 20px;';
-          label.textContent = s.name;
-
-          var closeBtn = document.createElement('button');
-          closeBtn.style.cssText = 'position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;';
-          closeBtn.innerHTML = '&times;';
-
-          var prevBtn = document.createElement('button');
-          prevBtn.style.cssText = 'position:absolute;left:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
-          prevBtn.innerHTML = '&#8249;';
-          if (idx === 0) prevBtn.style.opacity = '0.3';
-
-          var nextBtn = document.createElement('button');
-          nextBtn.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
-          nextBtn.innerHTML = '&#8250;';
-          if (idx >= stories.length - 1) nextBtn.style.opacity = '0.3';
-
-          inner.appendChild(img);
-          inner.appendChild(label);
-          inner.appendChild(closeBtn);
-          overlay.appendChild(prevBtn);
-          overlay.appendChild(inner);
-          overlay.appendChild(nextBtn);
-          document.body.appendChild(overlay);
-
-          closeBtn.addEventListener('click', function () { overlay.remove(); });
-          overlay.addEventListener('click', function (ev) {
-            if (ev.target === overlay) overlay.remove();
-          });
-          prevBtn.addEventListener('click', function () {
-            if (idx > 0) { overlay.remove(); openStoryViewer(idx - 1); }
-          });
-          nextBtn.addEventListener('click', function () {
-            if (idx < stories.length - 1) { overlay.remove(); openStoryViewer(idx + 1); }
-          });
-          document.addEventListener('keydown', function handler(ev) {
-            if (ev.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', handler); }
-            if (ev.key === 'ArrowLeft' && idx > 0) { overlay.remove(); document.removeEventListener('keydown', handler); openStoryViewer(idx - 1); }
-            if (ev.key === 'ArrowRight' && idx < stories.length - 1) { overlay.remove(); document.removeEventListener('keydown', handler); openStoryViewer(idx + 1); }
-          });
-        }
-      })();
-
-      // Mobile search toggle
-      (function () {
-        var btn = document.getElementById('kliper-mob-search-btn');
-        var row = document.getElementById('kliper-mob-search-row');
-        if (!btn || !row) return;
-        btn.addEventListener('click', function () {
-          var isOpen = row.classList.toggle('open');
-          btn.classList.toggle('open', isOpen);
-          if (isOpen) row.querySelector('input').focus();
-        });
-      })();
-
-      // Theme toggle
-      (function () {
-        var btn = document.getElementById('kliper-theme-toggle');
-        if (!btn) return;
-        btn.addEventListener('click', function () {
-          var isDark = document.documentElement.classList.toggle('kliper-dark-theme');
-          document.body.classList.toggle('kliper-dark-theme', isDark);
-          try { localStorage.setItem('kliper-theme', isDark ? 'dark' : 'light'); } catch (e) {}
-        });
-      })();
-
-      // View mode switcher (grid/list)
-      (function () {
-        var btns = document.querySelectorAll('.kliper-grid-view-btn');
-        var grid = document.getElementById('kliper-cards');
-        if (!btns.length || !grid) return;
-        btns.forEach(function (btn, i) {
-          btn.addEventListener('click', function () {
-            btns.forEach(function (b) { b.classList.remove('active'); });
-            btn.classList.add('active');
-            if (i === 0) {
-              grid.className = 'kliper-card-grid';
-            } else if (i === 1) {
-              grid.className = 'kliper-card-grid kliper-card-grid--list';
-            }
-          });
-        });
-      })();
-
-      // Search filter (live filtering by name)
-      (function () {
-        var inputs = document.querySelectorAll('.kliper-search-input, .kliper-mob-search-input');
-        inputs.forEach(function (input) {
-          input.addEventListener('input', function () {
-            var query = input.value.toLowerCase().trim();
-            var cards = document.querySelectorAll('.kliper-card');
-            var visible = 0;
-            cards.forEach(function (card) {
-              var name = (card.getAttribute('aria-label') || '').toLowerCase();
-              var show = !query || name.indexOf(query) !== -1;
-              card.style.display = show ? '' : 'none';
-              if (show) visible++;
-            });
-            var countEl = document.getElementById('kliper-card-count');
-            if (countEl) countEl.textContent = visible + ' карточек';
-            // Sync both search inputs
-            inputs.forEach(function (other) {
-              if (other !== input) other.value = input.value;
-            });
-          });
-        });
-      })();
+      window.addEventListener('load', function () {
+        var topMetricScript = document.createElement('script');
+        topMetricScript.src = './js/pages/top/top-metric-polish.js?v=top-nominations-3cols-2';
+        document.body.appendChild(topMetricScript);
+      });
     </script>
   </body>
 </html>
