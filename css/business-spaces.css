@@ -1,0 +1,563 @@
+.kliper-business-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+[data-business-spaces-host] {
+  transform: none !important;
+  transform-origin: center top !important;
+  opacity: 1 !important;
+}
+
+.kliper-business-count {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.kliper-business-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.kliper-business-view button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  min-height: 32px;
+  border-radius: 10px;
+  color: #8b5cf6;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.kliper-business-view button.is-active {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.kliper-business-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kliper-business-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 330px;
+  border: 0;
+  border-radius: 24px;
+  background: #0f172a;
+  box-shadow: 0 18px 54px rgba(15, 23, 42, 0.09);
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.kliper-business-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.14);
+}
+
+.kliper-business-card:focus-visible {
+  outline: 4px solid rgba(124, 58, 237, 0.28);
+  outline-offset: 4px;
+}
+
+.kliper-business-card__image {
+  position: absolute;
+  inset: 0;
+}
+
+.kliper-business-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kliper-business-card__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(3, 7, 18, 0.06) 0%, rgba(3, 7, 18, 0.32) 42%, rgba(3, 7, 18, 0.92) 100%),
+    linear-gradient(90deg, rgba(3, 7, 18, 0.58), transparent 58%);
+}
+
+.kliper-business-card__top {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 14px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.kliper-business-card__chip,
+.kliper-business-card__deal {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #42206b;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+.kliper-business-card__deal {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #fff;
+}
+
+.kliper-business-card__body {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 68px;
+  z-index: 2;
+  display: grid;
+  gap: 7px;
+}
+
+.kliper-business-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.kliper-business-card h3 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.kliper-business-card__address {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kliper-business-card__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.kliper-business-card__fact {
+  min-height: 44px;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.kliper-business-card__fact span {
+  display: block;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.kliper-business-card__fact strong {
+  display: block;
+  margin-top: 2px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.kliper-business-card__footer {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.kliper-business-card__badges {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kliper-business-card__badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.kliper-business-card__cta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: #fff;
+  color: #6d28d9;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.kliper-business-page {
+  display: grid;
+  gap: 18px;
+}
+
+.kliper-business-back {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: 12px;
+  background: #fff;
+  color: #6d28d9;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.kliper-business-hero {
+  overflow: hidden;
+  border-radius: 30px;
+  background: #0f172a;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.14);
+}
+
+.kliper-business-hero__media {
+  position: relative;
+  min-height: 380px;
+}
+
+.kliper-business-hero__media img {
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  object-fit: cover;
+}
+
+.kliper-business-hero__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(3, 7, 18, 0.02), rgba(3, 7, 18, 0.9));
+}
+
+.kliper-business-hero__content {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  color: #fff;
+}
+
+.kliper-business-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.kliper-business-hero__kicker span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.kliper-business-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.02;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.kliper-business-hero__price {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.kliper-business-hero__price strong,
+.kliper-business-hero__price span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 14px;
+  background: #fff;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 950;
+}
+
+.kliper-business-hero__price span {
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+}
+
+.kliper-business-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.kliper-business-main,
+.kliper-business-side {
+  display: grid;
+  gap: 14px;
+}
+
+.kliper-business-section,
+.kliper-business-side-card {
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 18px;
+  box-shadow: 0 18px 54px rgba(15, 23, 42, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.kliper-business-section h2,
+.kliper-business-side-card h3 {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 950;
+}
+
+.kliper-business-section p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.55;
+  font-weight: 650;
+}
+
+.kliper-business-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kliper-business-fact {
+  min-height: 76px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+}
+
+.kliper-business-fact span {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.kliper-business-fact strong {
+  display: block;
+  margin-top: 5px;
+  color: #111827;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 950;
+}
+
+.kliper-business-gallery {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 8px;
+}
+
+.kliper-business-gallery img {
+  width: 100%;
+  height: 150px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.kliper-business-gallery img:first-child {
+  height: 308px;
+  grid-row: span 2;
+}
+
+.kliper-business-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.kliper-business-check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 11px;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.kliper-business-check::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: #7c3aed;
+}
+
+.kliper-business-contact {
+  position: sticky;
+  top: 92px;
+}
+
+.kliper-business-contact__price {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.kliper-business-contact__price strong {
+  color: #111827;
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 950;
+}
+
+.kliper-business-contact__price span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.kliper-business-contact button {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.kliper-business-mini {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.kliper-business-mini img {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.kliper-business-mini strong {
+  display: block;
+  color: #111827;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 950;
+}
+
+.kliper-business-mini span {
+  display: block;
+  margin-top: 4px;
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+@media (max-width: 1080px) {
+  .kliper-business-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .kliper-business-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kliper-business-contact {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .kliper-business-card {
+    min-height: 360px;
+  }
+
+  .kliper-business-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kliper-business-card__facts,
+  .kliper-business-facts,
+  .kliper-business-checks,
+  .kliper-business-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .kliper-business-gallery img,
+  .kliper-business-gallery img:first-child {
+    height: 190px;
+    grid-row: auto;
+  }
+}

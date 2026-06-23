@@ -65,6 +65,8 @@
       '.kliper-biz-hint { font-size: 12px; font-weight: 800; color: #94a3b8; }',
       '.kliper-biz-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 5px 9px; border-radius: 999px; background: #f4efff; color: #6d28d9; font-size: 12px; font-weight: 900; }',
       '.kliper-biz-chip span { color: #64748b; font-weight: 800; }',
+      '.kliper-biz-chip strong { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 999px; background: #ede9fe; color: #6d28d9; font-size: 13px; line-height: 1; }',
+      '.kliper-biz-chip:hover strong { background: #7c3aed; color: #fff; }',
       '@media (max-width: 900px) { .kliper-biz-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } }',
       '@media (max-width: 520px) { .kliper-biz-bar { grid-template-columns: 1fr; padding-left: 12px; padding-right: 12px; } .kliper-biz-selected { padding-left: 12px; padding-right: 12px; } }'
     ].join('\n');
@@ -102,8 +104,35 @@
     }
     box.innerHTML = keys.map(function (key) {
       var item = selectedFilters[key];
-      return '<span class="kliper-biz-chip"><span>' + item.label + ':</span> ' + item.value + '</span>';
+      return '<button class="kliper-biz-chip" type="button" data-biz-filter-clear="' + item.label + '"><span>' + item.label + ':</span> ' + item.value + '<strong aria-hidden="true">×</strong></button>';
     }).join('');
+  }
+
+  function emitFilterChange() {
+    document.dispatchEvent(new CustomEvent('kliper:business-filter-change'));
+  }
+
+  function resetFilter(root, label) {
+    var wrapper = root.querySelector('[data-biz-filter-label="' + label + '"]');
+    if (!wrapper) return;
+    var trigger = wrapper.querySelector('.kliper-biz-trigger');
+    var panel = wrapper.querySelector('.kliper-biz-panel');
+    var filter = FILTERS.filter(function (item) { return item.label === label; })[0];
+    if (!trigger || !panel || !filter) return;
+
+    var options = panel.querySelectorAll('.kliper-biz-option');
+    for (var i = 0; i < options.length; i++) options[i].classList.remove('selected');
+
+    trigger.querySelector('.kliper-biz-trigger-left').innerHTML = filter.icon + ' ' + filter.label;
+    if (label === 'Все районы' && options[0]) {
+      options[0].classList.add('selected');
+      selectedFilters[label] = { label: label, value: options[0].textContent, show: false };
+    } else {
+      delete selectedFilters[label];
+    }
+
+    updateSelected(root);
+    emitFilterChange();
   }
 
   function polishFilter() {
@@ -116,6 +145,20 @@
           !s.getAttribute(DONE_ATTR)) {
         filterSection = s;
         break;
+      }
+    }
+    if (!filterSection && !document.querySelector('.kliper-biz-bar')) {
+      var businessHeading = Array.prototype.slice.call(document.querySelectorAll('h1,h2')).find(function (node) {
+        return (node.textContent || '').replace(/\s+/g, ' ').trim() === 'Для бизнеса';
+      });
+      if (businessHeading) {
+        var root = businessHeading.closest('.xl\\:col-span-2') || businessHeading.closest('section');
+        if (root) {
+          filterSection = document.createElement('section');
+          filterSection.className = 'kliper-biz-filter-fallback';
+          var host = root.querySelector('[data-business-spaces-host]');
+          root.insertBefore(filterSection, host || businessHeading.nextSibling);
+        }
       }
     }
     if (!filterSection) return;
@@ -132,6 +175,7 @@
     FILTERS.forEach(function (f) {
       var wrapper = document.createElement('div');
       wrapper.className = 'kliper-biz-dropdown';
+      wrapper.setAttribute('data-biz-filter-label', f.label);
 
       var trigger = document.createElement('button');
       trigger.className = 'kliper-biz-trigger';
@@ -146,6 +190,7 @@
         var optBtn = document.createElement('button');
         optBtn.className = 'kliper-biz-option';
         optBtn.type = 'button';
+        optBtn.setAttribute('data-biz-filter-value', opt);
         if (f.label === 'Все районы' && idx === 0) {
           optBtn.classList.add('selected');
           selectedFilters[f.label] = { label: f.label, value: opt, show: false };
@@ -163,6 +208,7 @@
           };
           updateSelected(filterSection);
           closeAllPanels(null);
+          emitFilterChange();
         });
         panel.appendChild(optBtn);
       });
@@ -190,13 +236,22 @@
     filterSection.appendChild(bar);
     filterSection.appendChild(selected);
     updateSelected(filterSection);
+    filterSection.addEventListener('click', function (event) {
+      var clear = event.target.closest('[data-biz-filter-clear]');
+      if (!clear) return;
+      event.preventDefault();
+      event.stopPropagation();
+      resetFilter(filterSection, clear.getAttribute('data-biz-filter-clear'));
+    });
+    document.dispatchEvent(new CustomEvent('kliper:business-filter-ready'));
   }
 
   // Close panels on outside click
   document.addEventListener('click', function () { closeAllPanels(null); });
 
   function schedule() {
-    setTimeout(polishFilter, 150);
+    polishFilter();
+    setTimeout(polishFilter, 40);
   }
 
   if (document.readyState === 'loading') {

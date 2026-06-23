@@ -448,3 +448,11 @@ window.KLIPER_DEVELOPERS = [
     site: ''
   }
 ];
+
+if (window.KLIPER_DEVELOPER_COVERS) {
+  window.KLIPER_DEVELOPERS.forEach(function (developer) {
+    if (window.KLIPER_DEVELOPER_COVERS[developer.name]) {
+      developer.bgImage = window.KLIPER_DEVELOPER_COVERS[developer.name];
+    }
+  });
+}

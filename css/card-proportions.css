@@ -14,8 +14,7 @@
 }
 
 /* Developer name — bigger */
-[aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] h3,
-[aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] [class*="font-black"]:not(p):not(span) {
+[aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"][class*="p-4"] h3 {
   font-size: 22px !important;
   line-height: 1.2 !important;
 }
@@ -72,8 +71,7 @@ p.kliper-developer-card-status-badges[data-developer-status-badges="ready"] {
   [aria-label^="Открыть карточку"] [class*="h-[285px]"] {
     height: 340px !important;
   }
-  [aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] h3,
-  [aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] [class*="font-black"]:not(p):not(span) {
+  [aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"][class*="p-4"] h3 {
     font-size: 20px !important;
   }
 }
