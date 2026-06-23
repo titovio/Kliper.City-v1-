@@ -32,12 +32,26 @@
     var s = document.createElement('style');
     s.id = STYLE_ID;
     s.textContent = [
-      '.kliper-phase1-topbar { display: grid; grid-template-columns: auto auto minmax(280px, 1fr); align-items: center; gap: 12px; }',
-      '.kliper-pills-moved { display: flex; align-items: center; gap: 4px; padding: 3px; border-radius: 10px; background: rgba(255,255,255,0.1); overflow-x: auto; scrollbar-width: none; }',
+      '.kliper-phase1-topbar { display: flex; align-items: center; gap: 10px; }',
+      '.kliper-pills-moved { display: flex; align-items: center; gap: 4px; padding: 3px; border-radius: 10px; background: rgba(255,255,255,0.08); overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }',
       '.kliper-pills-moved::-webkit-scrollbar { display: none; }',
-      '.kliper-pill-btn { white-space: nowrap; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 800; font-family: Manrope, sans-serif; color: rgba(255,255,255,0.65); background: transparent; border: none; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }',
-      '.kliper-pill-btn:hover { color: rgba(255,255,255,0.9); }',
+      '.kliper-pill-btn { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 800; font-family: Manrope, sans-serif; color: rgba(255,255,255,0.55); background: transparent; border: none; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }',
+      '.kliper-pill-btn svg { opacity: 0.6; }',
+      '.kliper-pill-btn:hover { color: rgba(255,255,255,0.85); }',
+      '.kliper-pill-btn:hover svg { opacity: 0.85; }',
       '.kliper-pill-btn.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; box-shadow: 0 4px 12px rgba(109,40,217,0.35); }',
+      '.kliper-pill-btn.active svg { opacity: 1; }',
+      '.kliper-pill-label { overflow: hidden; text-overflow: ellipsis; }',
+      /* Search button — collapsed */
+      '.kliper-search-btn { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.08); border: none; color: #fff; cursor: pointer; transition: all 0.2s; flex-shrink: 0; margin-left: auto; }',
+      '.kliper-search-btn:hover { background: rgba(255,255,255,0.14); }',
+      '.kliper-search-btn.open { background: rgba(124,58,237,0.5); color: #fff; }',
+      /* Search expanded field */
+      '.kliper-search-expanded { overflow: hidden; transition: max-width 0.3s ease, opacity 0.3s ease, padding 0.3s ease; max-width: 0; opacity: 0; padding: 0; }',
+      '.kliper-search-expanded.open { max-width: 400px; opacity: 1; padding: 0; flex: 1; min-width: 200px; }',
+      '.kliper-search-field { width: 100%; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 0 14px; font-size: 14px; font-weight: 600; font-family: Manrope, sans-serif; outline: none; }',
+      '.kliper-search-field::placeholder { color: rgba(255,255,255,0.35); }',
+      '.kliper-search-field:focus { border-color: rgba(124,58,237,0.5); background: rgba(255,255,255,0.12); }',
       '@media (max-width: 767px) { .kliper-phase1-topbar { display: none !important; } .kliper-mobile-nav { display: flex !important; } }',
       '@media (min-width: 768px) { .kliper-mobile-nav { display: none !important; } }',
       '.kliper-mobile-nav { flex-direction: column; gap: 0; padding: 0; }',
@@ -56,6 +70,15 @@
       '@media (max-width: 359px) { .kliper-mob-pill span { display: none; } .kliper-mob-pill { padding: 10px; } }'
     ].join('\n');
     document.head.appendChild(s);
+  }
+
+  function fixSubtitle() {
+    var els = document.querySelectorAll('p, span');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].textContent.trim() === 'Городская соцсеть' && els[i].children.length === 0) {
+        els[i].textContent = 'Новостройки города';
+      }
+    }
   }
 
   function cleanTabs() {
@@ -114,28 +137,32 @@
     return null;
   }
 
+  var activeLabel = 'Застройщики';
+
   function syncActiveState() {
+    // Desktop pills
     var clone = document.querySelector('.' + MOVED_MARKER);
     if (clone) {
       clone.querySelectorAll('.kliper-pill-btn').forEach(function (cb) {
-        var orig = findOriginalPillByText(cb.textContent.trim());
-        if (orig) {
-          var isActive = orig.className.indexOf('bg-violet') !== -1 || orig.className.indexOf('from-violet') !== -1;
-          if (isActive) cb.classList.add('active'); else cb.classList.remove('active');
-        }
+        var label = cb.getAttribute('data-label');
+        if (label === activeLabel) cb.classList.add('active'); else cb.classList.remove('active');
       });
     }
+    // Mobile pills
     var mobNav = document.querySelector('.kliper-mobile-nav');
     if (mobNav) {
       mobNav.querySelectorAll('.kliper-mob-pill').forEach(function (mb) {
         var label = mb.getAttribute('data-label');
-        var orig = findOriginalPillByText(label);
-        if (orig) {
-          var isActive = orig.className.indexOf('bg-violet') !== -1 || orig.className.indexOf('from-violet') !== -1;
-          if (isActive) mb.classList.add('active'); else mb.classList.remove('active');
-        }
+        if (label === activeLabel) mb.classList.add('active'); else mb.classList.remove('active');
       });
     }
+  }
+
+  function handlePillClick(label) {
+    activeLabel = label;
+    var orig = findOriginalPillByText(label);
+    if (orig) orig.click();
+    syncActiveState();
   }
 
   function movePillsToTopBar() {
@@ -152,23 +179,52 @@
     if (!topBarGrid) return;
 
     var searchWrap = searchInput.parentElement;
+
+    // Pills with icons
     var clone = document.createElement('div');
     clone.classList.add(MOVED_MARKER);
 
     PILLS.forEach(function (p) {
       var btn = document.createElement('button');
-      btn.textContent = p.label;
       btn.className = 'kliper-pill-btn';
-      btn.addEventListener('click', function () {
-        var orig = findOriginalPillByText(p.label);
-        if (orig) orig.click();
-      });
+      btn.setAttribute('data-label', p.label);
+      btn.innerHTML = p.icon + '<span class="kliper-pill-label">' + p.label + '</span>';
+      btn.addEventListener('click', function () { handlePillClick(p.label); });
       clone.appendChild(btn);
+    });
+
+    // Collapsible search
+    hide(searchWrap);
+    var searchBtn = document.createElement('button');
+    searchBtn.className = 'kliper-search-btn';
+    searchBtn.innerHTML = SEARCH_ICON;
+    var searchExpanded = document.createElement('div');
+    searchExpanded.className = 'kliper-search-expanded';
+    var searchField = document.createElement('input');
+    searchField.type = 'text';
+    searchField.className = 'kliper-search-field';
+    searchField.placeholder = 'Поиск: новостройки...';
+    searchExpanded.appendChild(searchField);
+
+    searchBtn.addEventListener('click', function () {
+      var isOpen = searchExpanded.classList.toggle('open');
+      searchBtn.classList.toggle('open', isOpen);
+      if (isOpen) searchField.focus();
+    });
+
+    searchField.addEventListener('input', function () {
+      if (searchInput) {
+        var nativeSet = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        nativeSet.call(searchInput, searchField.value);
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
     });
 
     topBarGrid.classList.add('kliper-phase1-topbar');
     topBarGrid.style.cssText = '';
     topBarGrid.insertBefore(clone, searchWrap);
+    topBarGrid.appendChild(searchBtn);
+    topBarGrid.appendChild(searchExpanded);
     setTimeout(syncActiveState, 50);
   }
 
@@ -236,10 +292,7 @@
       btn.className = 'kliper-mob-pill';
       btn.setAttribute('data-label', p.label);
       btn.innerHTML = p.icon + '<span>' + p.short + '</span>';
-      btn.addEventListener('click', function () {
-        var orig = findOriginalPillByText(p.label);
-        if (orig) orig.click();
-      });
+      btn.addEventListener('click', function () { handlePillClick(p.label); });
       pillRow.appendChild(btn);
     });
 
@@ -276,6 +329,7 @@
 
   function runAll() {
     injectStyles();
+    fixSubtitle();
     cleanTabs();
     cleanHamburger();
     cleanFilters();

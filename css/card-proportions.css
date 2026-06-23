@@ -1,0 +1,79 @@
+/* Card proportions — taller cards, bigger text, matching reference design */
+
+/* Card image area — taller */
+[aria-label^="Открыть карточку"] [class*="h-[285px]"] {
+  height: 360px !important;
+}
+
+/* "профиль компании" badge — match status badge size */
+[aria-label^="Открыть карточку"] [class*="absolute"][class*="left-4"][class*="top-4"] span {
+  font-size: 11px !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  min-height: 24px !important;
+}
+
+/* Developer name — bigger */
+[aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] h3,
+[aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] [class*="font-black"]:not(p):not(span) {
+  font-size: 22px !important;
+  line-height: 1.2 !important;
+}
+
+/* District text */
+[aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] [class*="items-center"][class*="gap-2"][class*="text-sm"] {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+/* Status badges (строится / отстроено) */
+.kliper-developer-card-status-badge {
+  font-size: 11.5px !important;
+  min-height: 26px !important;
+  padding: 0 10px !important;
+}
+
+/* Hide "отстроено 0 ЖК" badge */
+.kliper-developer-card-status-badge[data-hidden="1"] {
+  display: none !important;
+}
+
+/* Badge container — no background bubble */
+p.kliper-developer-card-status-badges[data-developer-status-badges="ready"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  max-width: 100% !important;
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 6px !important;
+  text-shadow: none !important;
+}
+
+/* Exclude badge wrapper from the card's p styling */
+[role="button"][aria-label^="Открыть карточку"] [class*="absolute"][class*="left-0"][class*="right-0"][class*="p-4"][class*="bottom-"] p.kliper-developer-card-status-badges {
+  display: flex !important;
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  margin-top: 6px !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  [aria-label^="Открыть карточку"] [class*="h-[285px]"] {
+    height: 340px !important;
+  }
+  [aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] h3,
+  [aria-label^="Открыть карточку"] [class*="absolute"][class*="bottom-"] [class*="font-black"]:not(p):not(span) {
+    font-size: 20px !important;
+  }
+}

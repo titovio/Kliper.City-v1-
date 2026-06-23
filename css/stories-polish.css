@@ -1,0 +1,59 @@
+/* Stories bar — увеличенные кружки, расположение под логотипом на полную ширину */
+
+/* Увеличение кружков историй */
+[class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="flex-col"][class*="items-center"] {
+  min-width: 72px !important;
+  gap: 6px !important;
+}
+
+/* Размер кружка-контейнера */
+[class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="rounded-full"][class*="shadow-"] {
+  width: 72px !important;
+  height: 72px !important;
+}
+
+/* Подписи — побольше */
+[class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="text-\[10px\]"] {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  max-width: 76px !important;
+}
+
+/* Зазор между кружками */
+[class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] {
+  gap: 14px !important;
+  padding: 8px 16px 10px !important;
+}
+
+/* Скрытие скроллбара */
+[class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] {
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch;
+}
+[class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Тёмная тема */
+.kliper-dark-theme [class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="rounded-full"][class*="shadow-"] {
+  box-shadow: 0 8px 22px rgba(2, 6, 23, 0.4) !important;
+}
+
+.kliper-dark-theme [class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="rounded-full"][class*="ring-"] {
+  background: var(--kliper-dark-surface, #0f172a) !important;
+}
+
+/* Мобильная версия — чуть меньше */
+@media (max-width: 640px) {
+  [class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="rounded-full"][class*="shadow-"] {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  [class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] [class*="flex-col"][class*="items-center"] {
+    min-width: 64px !important;
+  }
+  [class*="col-span-2"][class*="row-start-2"][class*="overflow-x-auto"] {
+    gap: 12px !important;
+    padding: 6px 12px 8px !important;
+  }
+}

@@ -1,7 +1,7 @@
 window.KLIPER_SITE_CONFIG = {
   brand: {
     name: "Клипер.Сити",
-    subtitle: "Городская соцсеть",
+    subtitle: "Новостройки города",
     logo: "/assets/logos/kliper-city-logo-3.png"
   },
   defaultUser: {

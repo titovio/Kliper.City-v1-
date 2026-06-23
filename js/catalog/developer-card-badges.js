@@ -50,8 +50,8 @@
     node.classList.remove('truncate');
     node.classList.add('kliper-developer-card-status-badges');
     node.setAttribute('data-developer-status-badges', 'ready');
-    node.appendChild(badge('строится ' + counts.active + ' ЖК'));
-    node.appendChild(badge('отстроено ' + counts.built + ' ЖК'));
+    if (counts.active > 0) node.appendChild(badge('строится ' + counts.active + ' ЖК'));
+    if (counts.built > 0) node.appendChild(badge('отстроено ' + counts.built + ' ЖК'));
   }
 
   function enhanceCards() {
