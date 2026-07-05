@@ -49,6 +49,8 @@
   }
 
   function readCurrentPage() {
+    if (document.querySelector('.kliper-business-page')) return null;
+
     var title = textOf(document.querySelector('h1'));
     if (!isLargePageTitle(title)) return null;
 

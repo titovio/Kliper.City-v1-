@@ -25,6 +25,11 @@
   ];
 
   function getBuildingImage(b) {
+    if (window.KLIPER_GET_JK_COVER) {
+      var cover = window.KLIPER_GET_JK_COVER(b);
+      if (cover) return cover;
+    }
+    if (window.KLIPER_JK_COVERS && window.KLIPER_JK_COVERS[b.name]) return window.KLIPER_JK_COVERS[b.name];
     if (b.imageUrl && b.imageUrl.indexOf('photo-1') !== -1) return b.imageUrl;
     return FALLBACK_IMAGES[b.id % FALLBACK_IMAGES.length];
   }

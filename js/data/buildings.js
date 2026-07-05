@@ -141,3 +141,17 @@ window.KLIPER_BUILDINGS = [
   { id: 141, name: "ЖК Дебют", developer: "Прочие / уточнить", district: "Центральный", zone: "в городе", status: "уточнить", year: 2026, price: "от 4,2 млн ₽", imageUrl: "https://images.unsplash.com/photo-RnCPiXixooY?w=600&h=400&fit=crop", tags: ["В городе / центр и инфраструктура", "город", "инфраструктура", "транспорт", "городская среда"] },
   { id: 142, name: "ЖК Скандиа", developer: "Прочие / уточнить", district: "Центральный", zone: "в городе", status: "уточнить", year: 2026, price: "от 4,2 млн ₽", imageUrl: "https://images.unsplash.com/photo-qt3rKrmOddY?w=600&h=400&fit=crop", tags: ["В городе / центр и инфраструктура", "город", "инфраструктура", "транспорт", "городская среда"] }
 ];
+
+if (window.KLIPER_GET_JK_COVER || window.KLIPER_JK_COVERS) {
+  window.KLIPER_BUILDINGS.forEach(function (building) {
+    var cover = window.KLIPER_GET_JK_COVER ? window.KLIPER_GET_JK_COVER(building) : '';
+
+    if (!cover && window.KLIPER_JK_COVERS && window.KLIPER_JK_COVERS[building.name]) {
+      cover = window.KLIPER_JK_COVERS[building.name];
+    }
+
+    if (cover) {
+      building.imageUrl = cover;
+    }
+  });
+}

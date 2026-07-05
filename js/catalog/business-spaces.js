@@ -3,6 +3,15 @@
 
   var renderTimer = 0;
   var suppressRender = false;
+  var softSwitchingCatalogTab = false;
+  var activatingBusinessRoute = false;
+  var businessRouteActivationTimer = 0;
+  var businessView = 'grid';
+  var businessViewIcons = {
+    grid: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.2"></rect><rect x="14" y="4" width="6" height="6" rx="1.2"></rect><rect x="4" y="14" width="6" height="6" rx="1.2"></rect><rect x="14" y="14" width="6" height="6" rx="1.2"></rect></svg>',
+    list: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12"></path><path d="M8 12h12"></path><path d="M8 18h12"></path><path d="M4 6h.01"></path><path d="M4 12h.01"></path><path d="M4 18h.01"></path></svg>',
+    map: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3Z"></path><path d="M9 3v15"></path><path d="M15 6v15"></path></svg>'
+  };
 
   function spaces() {
     return window.KLIPER_BUSINESS_SPACES || [];
@@ -16,16 +25,36 @@
       .replace(/"/g, '&quot;');
   }
 
-  function isBusinessView() {
-    var heading = Array.prototype.slice.call(document.querySelectorAll('h1,h2')).some(function (node) {
+  function isActiveBusinessButton(button) {
+    var classes = String(button.className || '').split(/\s+/);
+    return classes.some(function (name) {
+      return name === 'bg-gradient-to-br' ||
+        /^bg-violet-/.test(name) ||
+        /^from-violet-/.test(name) ||
+        /^to-violet-/.test(name);
+    });
+  }
+
+  function hasActiveBusinessTab() {
+    return Array.prototype.some.call(document.querySelectorAll('button'), function (button) {
+      return (button.textContent || '').trim() === 'Для бизнеса' && isActiveBusinessButton(button);
+    });
+  }
+
+  function hasBusinessHeading() {
+    return Array.prototype.slice.call(document.querySelectorAll('h1,h2')).some(function (node) {
       return (node.textContent || '').replace(/\s+/g, ' ').trim() === 'Для бизнеса';
     });
-    return (window.location.hash || '').indexOf('view=business') !== -1 ||
-      heading ||
-      Array.prototype.some.call(document.querySelectorAll('button'), function (button) {
-        return (button.textContent || '').trim() === 'Для бизнеса' &&
-          /(bg-violet-|from-violet-|to-violet-|bg-gradient-to-br)/.test(button.className || '');
-      });
+  }
+
+  function routeWantsBusiness() {
+    return (window.location.hash || '').indexOf('view=business') !== -1;
+  }
+
+  function isBusinessView() {
+    return routeWantsBusiness() ||
+      hasBusinessHeading() ||
+      hasActiveBusinessTab();
   }
 
   function currentSpaceId() {
@@ -37,16 +66,97 @@
     return Boolean(document.querySelector('[data-business-spaces-host], .kliper-business-card, .kliper-business-page'));
   }
 
-  function activatePendingCatalogTab() {
-    var pending = window.sessionStorage.getItem('kliper-pending-catalog-tab');
-    if (!pending) return;
-    window.sessionStorage.removeItem('kliper-pending-catalog-tab');
-    window.setTimeout(function () {
+  function findOriginalCatalogTab(label) {
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('button.flex.h-9'));
+    return buttons.find(function (node) {
+      var text = (node.textContent || node.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim();
+      if (text !== label) return false;
+      if (node.closest('.kliper-pills-moved')) return false;
+      if (node.closest('.kliper-mobile-nav')) return false;
+      if (node.closest('.kliper-biz-dropdown')) return false;
+      return true;
+    });
+  }
+
+  function clearBusinessRoute() {
+    if ((window.location.hash || '').indexOf('view=business') !== -1) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+
+  function restoreCatalogDom() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-business-spaces-host]'), function (host) {
+      if (host.parentElement) host.parentElement.removeChild(host);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-business-hidden-original]'), function (node) {
+      var display = node.getAttribute('data-business-previous-display');
+      if (display) node.style.display = display;
+      else node.style.removeProperty('display');
+      node.removeAttribute('data-business-hidden-original');
+      node.removeAttribute('data-business-previous-display');
+    });
+  }
+
+  function requestBusinessRouteActivation() {
+    if (!routeWantsBusiness()) return false;
+    if (hasBusinessMount() || hasBusinessHeading() || hasActiveBusinessTab()) return false;
+    if (businessRouteActivationTimer) return true;
+
+    var attempts = 0;
+    function tryActivate() {
+      attempts += 1;
       var button = Array.prototype.slice.call(document.querySelectorAll('.kliper-pill-btn')).find(function (node) {
-        return (node.textContent || '').replace(/\s+/g, ' ').trim() === pending;
-      });
-      if (button) button.click();
-    }, 700);
+        return (node.textContent || '').replace(/\s+/g, ' ').trim() === 'Для бизнеса';
+      }) || findOriginalCatalogTab('Для бизнеса');
+
+      if (button) {
+        activatingBusinessRoute = true;
+        button.click();
+        window.setTimeout(function () {
+          activatingBusinessRoute = false;
+          businessRouteActivationTimer = 0;
+          schedule(120);
+        }, 180);
+        return;
+      }
+
+      if (attempts < 16) {
+        businessRouteActivationTimer = window.setTimeout(tryActivate, 120);
+      } else {
+        businessRouteActivationTimer = 0;
+      }
+    }
+
+    businessRouteActivationTimer = window.setTimeout(tryActivate, 80);
+    return true;
+  }
+
+  function notifyCatalogTab(label) {
+    try {
+      document.dispatchEvent(new CustomEvent('kliper:phase1-set-active-tab', { detail: { label: label } }));
+    } catch (error) {}
+  }
+
+  function switchToCatalogTab(label) {
+    closeBusinessDropdowns();
+    clearBusinessRoute();
+    notifyCatalogTab(label);
+    restoreCatalogDom();
+
+    window.setTimeout(function () {
+      var button = findOriginalCatalogTab(label);
+      if (!button) return;
+
+      softSwitchingCatalogTab = true;
+      button.click();
+      window.setTimeout(function () {
+        softSwitchingCatalogTab = false;
+        clearBusinessRoute();
+        notifyCatalogTab(label);
+      }, 160);
+    }, 0);
+
+    return true;
   }
 
   function getSelectedFilters() {
@@ -109,22 +219,18 @@
   function findHost() {
     var section = findBusinessSection();
     if (!section) return null;
-    var existing = section.querySelector('[data-business-spaces-host]');
+    var existing = document.querySelector('[data-business-spaces-host]');
     if (existing) return existing;
-    var empty = Array.prototype.slice.call(section.querySelectorAll('h3')).find(function (node) {
-      return (node.textContent || '').indexOf('Ничего не найдено') !== -1;
+
+    Array.prototype.forEach.call(section.children, function (node) {
+      if (node.hasAttribute('data-business-spaces-host')) return;
+      if (node.querySelector('.kliper-biz-bar') || node.matches('.kliper-biz-bar')) return;
+      if (node.hasAttribute('data-business-hidden-original')) return;
+      node.setAttribute('data-business-hidden-original', '1');
+      node.setAttribute('data-business-previous-display', node.style.display || '');
+      node.style.display = 'none';
     });
-    if (empty && empty.parentElement && empty.parentElement.parentElement) {
-      empty.parentElement.parentElement.setAttribute('data-business-spaces-host', '1');
-      return empty.parentElement.parentElement;
-    }
-    var candidate = Array.prototype.slice.call(section.children).find(function (node) {
-      return !node.querySelector('.kliper-biz-bar') && !node.hasAttribute('data-kliper-collapsed');
-    });
-    if (candidate) {
-      candidate.setAttribute('data-business-spaces-host', '1');
-      return candidate;
-    }
+
     var host = document.createElement('div');
     host.setAttribute('data-business-spaces-host', '1');
     section.appendChild(host);
@@ -156,21 +262,70 @@
     '</button>';
   }
 
+  function viewButton(view, label) {
+    return '<button class="' + (businessView === view ? 'is-active' : '') + '" type="button" data-business-view="' + view + '" aria-label="' + label + '" aria-pressed="' + (businessView === view ? 'true' : 'false') + '">' + businessViewIcons[view] + '</button>';
+  }
+
+  function renderViewToggle() {
+    return '<div class="kliper-business-view" aria-label="Вид выдачи">' +
+      viewButton('grid', 'Показать бизнес-помещения сеткой') +
+      viewButton('list', 'Показать бизнес-помещения списком') +
+      viewButton('map', 'Показать бизнес-помещения на карте') +
+    '</div>';
+  }
+
+  function renderMap(items) {
+    var pins = items.map(function (space, index) {
+      var left = 12 + ((index * 29) % 76);
+      var top = 18 + ((index * 37) % 62);
+      return '<button class="kliper-business-map__pin" type="button" data-business-space-id="' + escapeHtml(space.id) + '" style="left:' + left + '%;top:' + top + '%" aria-label="Открыть на карте ' + escapeHtml(space.title) + '">' +
+        '<span>' + escapeHtml(index + 1) + '</span>' +
+        '<strong>' + escapeHtml(space.title) + '</strong>' +
+        '<em>' + escapeHtml(space.price) + '</em>' +
+      '</button>';
+    }).join('');
+
+    var list = items.map(function (space, index) {
+      return '<button class="kliper-business-map__item" type="button" data-business-space-id="' + escapeHtml(space.id) + '">' +
+        '<span>' + escapeHtml(index + 1) + '</span>' +
+        '<strong>' + escapeHtml(space.title) + '</strong>' +
+        '<em>' + escapeHtml(space.address) + '</em>' +
+      '</button>';
+    }).join('');
+
+    return '<div class="kliper-business-map">' +
+      '<div class="kliper-business-map__scene" aria-label="Карта бизнес-помещений">' +
+        '<span class="kliper-business-map__river"></span>' +
+        '<span class="kliper-business-map__road kliper-business-map__road--one"></span>' +
+        '<span class="kliper-business-map__road kliper-business-map__road--two"></span>' +
+        pins +
+      '</div>' +
+      '<div class="kliper-business-map__list">' + list + '</div>' +
+    '</div>';
+  }
+
   function renderList() {
     var host = findHost();
     if (!host) return;
     var items = filteredSpaces();
     var filters = getSelectedFilters();
-    var signature = 'list:' + JSON.stringify(filters) + ':' + items.map(function (item) { return item.id; }).join('|');
+    var signature = 'list:' + businessView + ':' + JSON.stringify(filters) + ':' + items.map(function (item) { return item.id; }).join('|');
     if (host.getAttribute('data-business-render-key') === signature) return;
     host.setAttribute('data-business-render-key', signature);
+    var content = '';
+    if (items.length && businessView === 'map') {
+      content = renderMap(items);
+    } else if (items.length) {
+      content = '<div class="kliper-business-grid' + (businessView === 'list' ? ' kliper-business-grid--list' : '') + '">' + items.map(renderCard).join('') + '</div>';
+    } else {
+      content = '<div class="rounded-[34px] bg-white/78 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-xl"><h3 class="text-2xl font-black text-slate-950">Ничего не найдено</h3><p class="mx-auto mt-2 max-w-xl text-sm font-semibold leading-relaxed text-slate-500">Попробуйте снять часть бизнес-фильтров или расширить бюджет.</p></div>';
+    }
     host.innerHTML =
       '<div class="kliper-business-toolbar">' +
         '<p class="kliper-business-count">' + items.length + ' бизнес-помещений</p>' +
-        '<div class="kliper-business-view" aria-label="Вид выдачи"><button class="is-active" type="button">▦</button><button type="button">≡</button></div>' +
+        renderViewToggle() +
       '</div>' +
-      (items.length ? '<div class="kliper-business-grid">' + items.map(renderCard).join('') + '</div>' :
-        '<div class="rounded-[34px] bg-white/78 p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-xl"><h3 class="text-2xl font-black text-slate-950">Ничего не найдено</h3><p class="mx-auto mt-2 max-w-xl text-sm font-semibold leading-relaxed text-slate-500">Попробуйте снять часть бизнес-фильтров или расширить бюджет.</p></div>');
+      content;
   }
 
   function section(title, body) {
@@ -229,11 +384,32 @@
   }
 
   function render() {
+    if (requestBusinessRouteActivation()) return;
     if (suppressRender || !isBusinessView()) return;
     var id = currentSpaceId();
     var selected = id && spaces().filter(function (space) { return space.id === id; })[0];
     if (selected) renderDetail(selected);
     else renderList();
+  }
+
+  function closeBusinessDropdowns() {
+    Array.prototype.forEach.call(document.querySelectorAll('.kliper-biz-panel.open'), function (panel) {
+      panel.classList.remove('open');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.kliper-biz-trigger.open'), function (trigger) {
+      trigger.classList.remove('open');
+      var icon = trigger.querySelector('.kliper-biz-chevron');
+      if (icon) {
+        icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>';
+      }
+    });
+  }
+
+  function collapseFilterPanel() {
+    var action = Array.prototype.slice.call(document.querySelectorAll('button')).find(function (button) {
+      return (button.textContent || '').replace(/\s+/g, ' ').trim() === 'Свернуть фильтр';
+    });
+    if (action) action.click();
   }
 
   function schedule(delay) {
@@ -245,22 +421,34 @@
     var tabButton = event.target.closest('button');
     var tabText = tabButton ? (tabButton.textContent || tabButton.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim() : '';
     if (['Застройщики', 'Новостройки', 'Готовые ЖК'].indexOf(tabText) !== -1) {
-      if (hasBusinessMount() || (window.location.hash || '').indexOf('view=business') !== -1) {
+      if (softSwitchingCatalogTab) return;
+      if (hasBusinessMount() || routeWantsBusiness()) {
         event.preventDefault();
         event.stopPropagation();
-        window.sessionStorage.setItem('kliper-pending-catalog-tab', tabText);
-        window.history.replaceState(null, '', window.location.pathname + window.location.search);
-        window.location.reload();
+        switchToCatalogTab(tabText);
         return;
       }
       window.setTimeout(function () {
-        if ((window.location.hash || '').indexOf('view=business') === -1) return;
+        if (!routeWantsBusiness()) return;
         if (isBusinessView()) return;
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }, 120);
       return;
     }
     if (tabText === 'Для бизнеса' && !event.target.closest('.kliper-biz-dropdown')) {
+      if (activatingBusinessRoute) {
+        schedule(220);
+        window.setTimeout(render, 460);
+        return;
+      }
+      if (hasBusinessHeading() || hasActiveBusinessTab() || hasBusinessMount()) {
+        event.preventDefault();
+        event.stopPropagation();
+        closeBusinessDropdowns();
+        collapseFilterPanel();
+        schedule(120);
+        return;
+      }
       schedule(180);
       window.setTimeout(render, 360);
       window.setTimeout(render, 640);
@@ -285,6 +473,13 @@
       schedule();
       return;
     }
+    var viewButton = event.target.closest('[data-business-view]');
+    if (viewButton) {
+      event.preventDefault();
+      businessView = viewButton.getAttribute('data-business-view') || 'grid';
+      renderList();
+      return;
+    }
     if (event.target.closest('.kliper-biz-option')) {
       if (currentSpaceId()) {
         suppressRender = true;
@@ -296,7 +491,9 @@
   }, true);
 
   window.addEventListener('hashchange', function () { schedule(); });
-  window.addEventListener('load', function () { schedule(); });
+  window.addEventListener('load', function () {
+    schedule();
+  });
   document.addEventListener('kliper:business-filter-ready', function () { schedule(20); });
   document.addEventListener('kliper:business-filter-change', function () {
     if (currentSpaceId()) {
@@ -308,11 +505,9 @@
   });
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
-      activatePendingCatalogTab();
       schedule();
     });
   } else {
-    activatePendingCatalogTab();
     schedule();
   }
 })();

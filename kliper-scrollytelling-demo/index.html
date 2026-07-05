@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kliper.City — cinematic scroll demo</title>
+  <link rel="stylesheet" href="styles.css?v=three-window-stories-3" />
+</head>
+<body>
+  <header class="topbar" aria-label="Навигация">
+    <a class="brand" href="#top" aria-label="Kliper.City"><span>KLIPER</span><small>.CITY</small></a>
+    <nav>
+      <a href="#effect">Эффект</a>
+      <a href="#city">Город</a>
+      <a href="#district">Истории</a>
+      <a href="#card">Карточки</a>
+      <a href="#contact">Запуск</a>
+      <button class="effect-toggle" type="button" aria-pressed="true">Эффект вкл</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="city-approach" id="effect" aria-label="Верхний эффект приближения к району">
+      <div class="approach-stage">
+        <div class="approach-hud">
+          <span>город сверху</span>
+          <strong>3 приближения</strong>
+        </div>
+        <div class="city-orbit" aria-hidden="true">
+          <canvas class="city-webgl"></canvas>
+          <div class="city-plane">
+            <img class="city-layer city-layer--1" src="assets/city-scroll-layers/city-layer-01-wide.webp" alt="" aria-hidden="true" />
+            <img class="city-layer city-layer--2" src="assets/city-scroll-layers/city-layer-02-approach.webp" alt="" aria-hidden="true" />
+            <img class="city-layer city-layer--3" src="assets/city-scroll-layers/city-layer-03-district.webp" alt="" aria-hidden="true" />
+            <img class="city-layer city-layer--4" src="assets/city-scroll-layers/city-layer-04-close.webp" alt="" aria-hidden="true" />
+            <div class="city-river"></div>
+            <div class="city-road city-road--one"></div>
+            <div class="city-road city-road--two"></div>
+            <div class="city-road city-road--three"></div>
+            <div class="district-target"></div>
+            <div class="tower tower--1"></div>
+            <div class="tower tower--2"></div>
+            <div class="tower tower--3"></div>
+            <div class="tower tower--4"></div>
+            <div class="tower tower--5"></div>
+            <div class="tower tower--6"></div>
+            <div class="tower tower--7"></div>
+            <div class="tower tower--8"></div>
+            <div class="tower tower--9"></div>
+            <div class="tower tower--10"></div>
+            <div class="tower tower--11"></div>
+            <div class="tower tower--12"></div>
+          </div>
+        </div>
+        <div class="approach-title">
+          <small>Европейский берег</small>
+          <h1>С высоты города<br />внутрь района</h1>
+        </div>
+        <div class="story-deck" aria-hidden="true">
+          <article class="story-shot story-shot--1">
+            <small>июнь</small>
+            <strong>Двор без машин</strong>
+            <span>маршрут дня</span>
+          </article>
+          <article class="story-shot story-shot--2">
+            <small>июль</small>
+            <strong>Набережная</strong>
+            <span>вечерний сценарий</span>
+          </article>
+          <article class="story-shot story-shot--3">
+            <small>август</small>
+            <strong>Кофейни рядом</strong>
+            <span>места жителей</span>
+          </article>
+          <article class="story-shot story-shot--4">
+            <small>сентябрь</small>
+            <strong>Новая очередь</strong>
+            <span>карточка ЖК</span>
+          </article>
+        </div>
+        <div class="story-orb" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="site-reveal" aria-hidden="true">
+          <span>KLIPER.CITY</span>
+          <strong>обычный сайт</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro" id="city">
+      <div class="intro__meta">универсальный scrollytelling-модуль</div>
+      <h1>Город приближается.<br />История раскрывается.<br />Карточка остаётся.</h1>
+      <p>
+        Прототип для Kliper.City: один компонент можно повторять для ЖК, районов,
+        компаний, событий и городских мест. Данные меняются в массиве <code>places</code>.
+      </p>
+      <div class="intro__actions">
+        <a href="#journeys" class="button button--filled">Смотреть механику</a>
+        <a href="#contact" class="button button--ghost">Как использовать</a>
+      </div>
+      <div class="scroll-note">SCROLL TO CONTINUE ↓</div>
+    </section>
+
+    <div id="journeys" class="journeys" aria-live="polite"></div>
+
+    <section class="manual" id="contact">
+      <div class="manual__grid">
+        <div>
+          <p class="eyebrow">как внедрять</p>
+          <h2>Один файл данных — много сцен</h2>
+        </div>
+        <div class="manual__body">
+          <p>
+            В <strong>script.js</strong> есть массив <code>places</code>. Для каждого объекта задаются название,
+            тип, район, текст истории, метрики и позиция точки на карте. Компонент сам создаёт
+            полный сценарий: город → приближение → история → карточка.
+          </p>
+          <p>
+            В реальном сайте вместо CSS-карты можно подставить изображение города, SVG-карту,
+            2ГИС-скрин или WebGL-сцену. Логика скролла останется такой же.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js?v=three-window-stories-3"></script>
+</body>
+</html>

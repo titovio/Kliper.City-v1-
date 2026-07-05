@@ -32,24 +32,31 @@
     var s = document.createElement('style');
     s.id = STYLE_ID;
     s.textContent = [
-      '.kliper-phase1-topbar { display: flex; align-items: center; gap: 10px; }',
-      '.kliper-pills-moved { display: flex; align-items: center; gap: 4px; padding: 3px; border-radius: 10px; background: rgba(255,255,255,0.08); overflow-x: auto; scrollbar-width: none; flex-shrink: 0; }',
+      '.kliper-control-shell { position: relative !important; z-index: 160 !important; overflow: visible !important; border-radius: 22px !important; background: linear-gradient(180deg, rgba(3,10,29,0.96), rgba(3,10,29,0.91)) !important; border: 1px solid rgba(255,255,255,0.08) !important; box-shadow: 0 18px 46px rgba(15,23,42,0.16), inset 0 1px 0 rgba(255,255,255,0.055) !important; }',
+      '.kliper-phase1-topbar { display: grid !important; grid-template-columns: auto minmax(0, auto) 1fr auto; align-items: center; gap: 14px; overflow: visible !important; }',
+      '.kliper-phase1-city-wrap { position: relative !important; z-index: 220 !important; overflow: visible !important; }',
+      '.kliper-phase1-city-wrap > div[class*="absolute"] { z-index: 240 !important; }',
+      '.kliper-phase1-city { min-width: 166px !important; height: 46px !important; border-radius: 12px !important; background: rgba(255,255,255,0.075) !important; border: 1px solid rgba(255,255,255,0.105) !important; color: rgba(255,255,255,0.94) !important; box-shadow: none !important; transform: none !important; }',
+      '.kliper-phase1-city:hover { background: rgba(255,255,255,0.105) !important; border-color: rgba(255,255,255,0.16) !important; }',
+      '.kliper-phase1-city svg { opacity: 0.78; }',
+      '.kliper-pills-moved { display: flex; align-items: center; gap: 8px; padding: 0; border-radius: 0; background: transparent; border: 0; overflow-x: auto; scrollbar-width: none; flex-shrink: 0; box-shadow: none; }',
       '.kliper-pills-moved::-webkit-scrollbar { display: none; }',
-      '.kliper-pill-btn { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 800; font-family: Manrope, sans-serif; color: rgba(255,255,255,0.55); background: transparent; border: none; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }',
-      '.kliper-pill-btn svg { opacity: 0.6; }',
-      '.kliper-pill-btn:hover { color: rgba(255,255,255,0.85); }',
-      '.kliper-pill-btn:hover svg { opacity: 0.85; }',
-      '.kliper-pill-btn.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; box-shadow: 0 4px 12px rgba(109,40,217,0.35); }',
+      '.kliper-pill-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 150px; height: 36px; white-space: nowrap; padding: 7px 13px; border-radius: 9px; font-size: 13px; font-weight: 850; font-family: Manrope, sans-serif; color: rgba(255,255,255,0.68); background: rgba(255,255,255,0.075); border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.035); cursor: pointer; transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease; -webkit-tap-highlight-color: transparent; }',
+      '.kliper-pill-btn svg { width: 15px; height: 15px; opacity: 0.55; }',
+      '.kliper-pill-btn:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.105); border-color: rgba(255,255,255,0.14); }',
+      '.kliper-pill-btn:hover svg { opacity: 0.86; }',
+      '.kliper-pill-btn.active { background: linear-gradient(135deg, #7c3aed, #6d28d9); border-color: rgba(167,139,250,0.34); color: #fff; box-shadow: 0 7px 18px rgba(109,40,217,0.22), inset 0 1px 0 rgba(255,255,255,0.16); }',
       '.kliper-pill-btn.active svg { opacity: 1; }',
       '.kliper-pill-label { overflow: hidden; text-overflow: ellipsis; }',
       /* Search button — collapsed */
-      '.kliper-search-btn { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.08); border: none; color: #fff; cursor: pointer; transition: all 0.2s; flex-shrink: 0; margin-left: auto; }',
-      '.kliper-search-btn:hover { background: rgba(255,255,255,0.14); }',
-      '.kliper-search-btn.open { background: rgba(124,58,237,0.5); color: #fff; }',
+      '.kliper-search-btn { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.075); border: 1px solid rgba(255,255,255,0.105); color: rgba(255,255,255,0.92); cursor: pointer; transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease; flex-shrink: 0; margin-left: auto; box-shadow: none; }',
+      '.kliper-search-btn svg { width: 19px; height: 19px; }',
+      '.kliper-search-btn:hover { background: rgba(124,58,237,0.22); border-color: rgba(167,139,250,0.28); color: #fff; }',
+      '.kliper-search-btn.open { background: rgba(124,58,237,0.34); border-color: rgba(167,139,250,0.38); color: #fff; }',
       /* Search expanded field */
       '.kliper-search-expanded { overflow: hidden; transition: max-width 0.3s ease, opacity 0.3s ease, padding 0.3s ease; max-width: 0; opacity: 0; padding: 0; }',
       '.kliper-search-expanded.open { max-width: 400px; opacity: 1; padding: 0; flex: 1; min-width: 200px; }',
-      '.kliper-search-field { width: 100%; height: 42px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 0 14px; font-size: 14px; font-weight: 600; font-family: Manrope, sans-serif; outline: none; }',
+      '.kliper-search-field { width: 100%; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.075); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 0 14px; font-size: 14px; font-weight: 650; font-family: Manrope, sans-serif; outline: none; }',
       '.kliper-search-field::placeholder { color: rgba(255,255,255,0.35); }',
       '.kliper-search-field:focus { border-color: rgba(124,58,237,0.5); background: rgba(255,255,255,0.12); }',
       '@media (max-width: 767px) { .kliper-phase1-topbar { display: none !important; } .kliper-mobile-nav { display: flex !important; } }',
@@ -165,6 +172,13 @@
     syncActiveState();
   }
 
+  document.addEventListener('kliper:phase1-set-active-tab', function (event) {
+    var label = event.detail && event.detail.label;
+    if (!label) return;
+    activeLabel = label;
+    syncActiveState();
+  });
+
   function movePillsToTopBar() {
     if (document.querySelector('.' + MOVED_MARKER)) { syncActiveState(); return; }
 
@@ -179,6 +193,7 @@
     if (!topBarGrid) return;
 
     var searchWrap = searchInput.parentElement;
+    if (topBarGrid.parentElement) topBarGrid.parentElement.classList.add('kliper-control-shell');
 
     // Pills with icons
     var clone = document.createElement('div');
@@ -222,6 +237,13 @@
 
     topBarGrid.classList.add('kliper-phase1-topbar');
     topBarGrid.style.cssText = '';
+    var cityButton = Array.prototype.slice.call(topBarGrid.querySelectorAll('button')).find(function (button) {
+      return (button.textContent || '').replace(/\s+/g, ' ').trim().indexOf('Тюмень') !== -1;
+    });
+    if (cityButton) {
+      cityButton.classList.add('kliper-phase1-city');
+      if (cityButton.parentElement) cityButton.parentElement.classList.add('kliper-phase1-city-wrap');
+    }
     topBarGrid.insertBefore(clone, searchWrap);
     topBarGrid.appendChild(searchBtn);
     topBarGrid.appendChild(searchExpanded);

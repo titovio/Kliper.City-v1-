@@ -26,11 +26,45 @@
     };
   }
 
-  function badge(text) {
+  function badge(status, count) {
     var span = document.createElement('span');
     span.className = 'kliper-developer-card-status-badge';
-    span.textContent = text;
+    span.setAttribute('data-status', status);
+    span.setAttribute('aria-label', (status === 'active' ? 'строится ' : 'отстроено ') + count + ' ЖК');
+    span.textContent = count + ' ЖК';
     return span;
+  }
+
+  function findCountEl() {
+    return document.getElementById('kliper-card-count') ||
+      Array.prototype.slice.call(document.querySelectorAll('main p, main span')).find(function (node) {
+        return /^\d+\s+карточ/.test(cleanText(node));
+      });
+  }
+
+  function syncLegend(isVisible) {
+    var countEl = findCountEl();
+    var legend = document.querySelector('.kliper-developer-card-status-legend');
+    var isDevelopersPage = Array.prototype.slice.call(document.querySelectorAll('h1,h2')).some(function (node) {
+      return cleanText(node) === 'Застройщики';
+    });
+    if (!countEl) return;
+    isVisible = isVisible || isDevelopersPage;
+    if (countEl.parentElement) countEl.parentElement.classList.toggle('kliper-developer-results-row', isVisible);
+
+    if (!isVisible) {
+      if (legend) legend.remove();
+      return;
+    }
+
+    if (!legend) {
+      legend = document.createElement('span');
+      legend.className = 'kliper-developer-card-status-legend';
+      legend.innerHTML =
+        '<span><i data-status="active"></i>строится</span>' +
+        '<span><i data-status="built"></i>отстроено</span>';
+      countEl.insertAdjacentElement('afterend', legend);
+    }
   }
 
   function enhanceBadge(node) {
@@ -50,14 +84,16 @@
     node.classList.remove('truncate');
     node.classList.add('kliper-developer-card-status-badges');
     node.setAttribute('data-developer-status-badges', 'ready');
-    if (counts.active > 0) node.appendChild(badge('строится ' + counts.active + ' ЖК'));
-    if (counts.built > 0) node.appendChild(badge('отстроено ' + counts.built + ' ЖК'));
+    if (counts.active > 0) node.appendChild(badge('active', counts.active));
+    if (counts.built > 0) node.appendChild(badge('built', counts.built));
   }
 
   function enhanceCards() {
+    var before = document.querySelector('.kliper-developer-card-status-badges');
     Array.prototype.forEach.call(document.querySelectorAll('[aria-label^="Открыть карточку"] p'), function (node) {
       enhanceBadge(node);
     });
+    syncLegend(Boolean(before || document.querySelector('.kliper-developer-card-status-badges')));
   }
 
   function schedule() {

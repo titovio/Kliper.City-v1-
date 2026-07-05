@@ -46,14 +46,14 @@ window.KLIPER_DEVELOPERS = [
     name: 'ДК {ХаризМЫ}',
     slug: 'dk-harizmy',
     bgImage: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1200&auto=format&fit=crop',
-    avatar: 'https://www.google.com/s2/favicons?domain=harizmy.ru&sz=128',
+    avatar: '',
     districts: 'Ленинский',
     activeJK: 1,
     builtJK: 0,
     likes: 589,
     notifications: 32,
     comments: 4,
-    site: 'harizmy.ru'
+    site: ''
   },
   {
     id: 5,
@@ -214,14 +214,14 @@ window.KLIPER_DEVELOPERS = [
     name: 'Тюменская ДСК',
     slug: 'tyumenskaya-dsk',
     bgImage: 'https://images.unsplash.com/photo-1494522358652-f30e61a60313?q=80&w=1200&auto=format&fit=crop',
-    avatar: 'https://www.google.com/s2/favicons?domain=tdsk.ru&sz=128',
+    avatar: '',
     districts: 'Восточный, Тюмень, Плеханово',
     activeJK: 3,
     builtJK: 1,
     likes: 438,
     notifications: 32,
     comments: 4,
-    site: 'tdsk.ru'
+    site: ''
   },
   {
     id: 17,

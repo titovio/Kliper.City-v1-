@@ -1,0 +1,22 @@
+{
+  "name": "kliper-motion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:intro": "remotion render src/index.ts TyumenIntro out/tyumen-intro.mp4 --codec=h264",
+    "still:intro": "remotion still src/index.ts TyumenIntro out/tyumen-intro-frame-180.png --frame=180"
+  },
+  "dependencies": {
+    "@remotion/cli": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "remotion": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
+  }
+}
