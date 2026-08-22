@@ -12,11 +12,11 @@ window.KLIPER_BUSINESS_SPACES = [
     pricePerMeter: '1 500 ₽/м²',
     deposit: 'депозит 1 месяц',
     tax: 'УСН',
-    image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=82',
+    image: './assets/images/jk/brusnika__rechnoy_port_cover_4x3.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=82'
+      './assets/images/jk/brusnika__rechnoy_port_cover_4x3.webp',
+      './assets/images/jk/01_brusnika__rechnoy_port_cover_4x3.webp',
+      './assets/images/jk/dsm__dom_na_naberezhnoy_cover_4x3.webp'
     ],
     badges: ['отдельный вход', 'витражи', 'мокрая точка'],
     traffic: '1 800 человек/день',
@@ -43,11 +43,11 @@ window.KLIPER_BUSINESS_SPACES = [
     pricePerMeter: '1 803 ₽/м²',
     deposit: 'каникулы обсуждаются',
     tax: 'НДС',
-    image: 'https://images.unsplash.com/photo-1560472355-536de3962603?auto=format&fit=crop&w=1200&q=82',
+    image: './assets/images/jk/strana__evropeyskiy_bereg_cover_4x3.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1560472355-536de3962603?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=82'
+      './assets/images/jk/strana__evropeyskiy_bereg_cover_4x3.webp',
+      './assets/images/jk/09_strana__evropeyskiy_bereg_cover_4x3.webp',
+      './assets/images/jk/brusnika__evropeyskiy_kvartal_cover_4x3.webp'
     ],
     badges: ['первая линия', 'место под вывеску', '2 входа'],
     traffic: '2 400 человек/день',
@@ -74,11 +74,11 @@ window.KLIPER_BUSINESS_SPACES = [
     pricePerMeter: '117 480 ₽/м²',
     deposit: 'окупаемость 8,5 лет',
     tax: 'объект с арендатором',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=82',
+    image: './assets/images/jk/gk_partner__skandia_kvartal_u_ozera_cover_4x3.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1586528116022-aeda1613a8a9?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=1200&q=82'
+      './assets/images/jk/gk_partner__skandia_kvartal_u_ozera_cover_4x3.webp',
+      './assets/images/jk/gk_partner__maloetazhnye_kvartaly_partnera_cover_4x3.webp',
+      './assets/images/jk/prochie_utochnit__moskovskiy_dvorik_cover_4x3.webp'
     ],
     badges: ['действующий арендатор', 'зона разгрузки', 'высокие ворота'],
     traffic: 'автомобильный поток',
@@ -105,11 +105,11 @@ window.KLIPER_BUSINESS_SPACES = [
     pricePerMeter: '1 700 ₽/м²',
     deposit: 'депозит 1 месяц',
     tax: 'коммунальные отдельно',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=82',
+    image: './assets/images/jk/brusnika__respubliki_205_cover_4x3.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1200&q=82'
+      './assets/images/jk/brusnika__respubliki_205_cover_4x3.webp',
+      './assets/images/jk/02_brusnika__respubliki_205_cover_4x3.webp',
+      './assets/images/jk/inko__ariya_cover_4x3.webp'
     ],
     badges: ['кабинетная планировка', 'санузел', 'ресепшн'],
     traffic: 'деловой центр',
@@ -136,11 +136,11 @@ window.KLIPER_BUSINESS_SPACES = [
     pricePerMeter: '1 598 ₽/м²',
     deposit: 'каникулы 45 дней',
     tax: 'УСН',
-    image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=82',
+    image: './assets/images/jk/gk_partner__pervyy_patrushevskiy_cover_4x3.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=1200&q=82'
+      './assets/images/jk/gk_partner__pervyy_patrushevskiy_cover_4x3.webp',
+      './assets/images/jk/gk_partner__evropeyskiy_kvartal_partnera_semeynyy_rayon_cover_4x3.webp',
+      './assets/images/jk/strana__domashniy_cover_4x3.webp'
     ],
     badges: ['летняя посадка', 'мокрая точка', 'витрина'],
     traffic: '1 200 жителей рядом',
@@ -167,11 +167,11 @@ window.KLIPER_BUSINESS_SPACES = [
     pricePerMeter: '91 667 ₽/м²',
     deposit: 'свободно',
     tax: 'оформление по ДКП',
-    image: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1200&q=82',
+    image: './assets/images/jk/strana__domashev_cover_4x3.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=1200&q=82',
-      'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=1200&q=82'
+      './assets/images/jk/strana__domashev_cover_4x3.webp',
+      './assets/images/jk/12_strana__domashev_cover_4x3.webp',
+      './assets/images/jk/dk_harizmy__akvatoriya_cover_4x3.webp'
     ],
     badges: ['рядом с лифтом', 'сухой паркинг', 'охрана'],
     traffic: 'для резидентов',

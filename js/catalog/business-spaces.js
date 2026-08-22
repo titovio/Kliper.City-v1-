@@ -6,7 +6,10 @@
   var softSwitchingCatalogTab = false;
   var activatingBusinessRoute = false;
   var businessRouteActivationTimer = 0;
+  var suppressBusinessUntil = 0;
   var businessView = 'grid';
+  var businessPreviewId = '';
+  var SAVED_KEY = 'kliper-saved-business-spaces';
   var businessViewIcons = {
     grid: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.2"></rect><rect x="14" y="4" width="6" height="6" rx="1.2"></rect><rect x="4" y="14" width="6" height="6" rx="1.2"></rect><rect x="14" y="14" width="6" height="6" rx="1.2"></rect></svg>',
     list: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12"></path><path d="M8 12h12"></path><path d="M8 18h12"></path><path d="M4 6h.01"></path><path d="M4 12h.01"></path><path d="M4 18h.01"></path></svg>',
@@ -23,6 +26,36 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function readSavedSpaces() {
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(SAVED_KEY);
+      var parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function writeSavedSpaces(ids) {
+    try {
+      if (window.localStorage) window.localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
+    } catch (error) {}
+  }
+
+  function isSavedSpace(id) {
+    return readSavedSpaces().indexOf(id) !== -1;
+  }
+
+  function toggleSavedSpace(id) {
+    if (!id) return false;
+    var ids = readSavedSpaces();
+    var index = ids.indexOf(id);
+    if (index === -1) ids.push(id);
+    else ids.splice(index, 1);
+    writeSavedSpaces(ids);
+    return index === -1;
   }
 
   function isActiveBusinessButton(button) {
@@ -62,8 +95,17 @@
     return match ? decodeURIComponent(match[1]) : '';
   }
 
+  function routeWantsCardPage() {
+    return (window.location.hash || '').indexOf('card=') !== -1;
+  }
+
   function hasBusinessMount() {
     return Boolean(document.querySelector('[data-business-spaces-host], .kliper-business-card, .kliper-business-page'));
+  }
+
+  function leavingBusinessRoute() {
+    return hasBusinessMount() && !routeWantsBusiness() &&
+      (routeWantsCardPage() || (!hasBusinessHeading() && !hasActiveBusinessTab()));
   }
 
   function findOriginalCatalogTab(label) {
@@ -241,8 +283,28 @@
     return '<div class="kliper-business-fact"><span>' + escapeHtml(label) + '</span><strong>' + escapeHtml(value) + '</strong></div>';
   }
 
+  function check(label, value) {
+    return '<div class="kliper-business-check"><span>' + escapeHtml(label) + '</span><strong>' + escapeHtml(value) + '</strong></div>';
+  }
+
+  function splitFit(space) {
+    return String(space.payback || '').split(',').map(function (item) {
+      return item.replace(/^\s+|\s+$/g, '');
+    }).filter(Boolean);
+  }
+
+  function renderFitTags(space) {
+    var tags = splitFit(space);
+    if (!tags.length) return '';
+    return '<div class="kliper-business-fit">' + tags.map(function (item) {
+      return '<span>' + escapeHtml(item) + '</span>';
+    }).join('') + '</div>';
+  }
+
   function renderCard(space) {
-    return '<button class="kliper-business-card" type="button" data-business-space-id="' + escapeHtml(space.id) + '" aria-label="Открыть бизнес-помещение ' + escapeHtml(space.title) + '">' +
+    var saved = isSavedSpace(space.id);
+    var fitTags = splitFit(space).slice(0, 1).map(function (item) { return '<span>' + escapeHtml(item) + '</span>'; }).join('');
+    return '<article class="kliper-business-card" role="button" tabindex="0" data-business-space-id="' + escapeHtml(space.id) + '" aria-label="Открыть бизнес-помещение ' + escapeHtml(space.title) + '">' +
       '<span class="kliper-business-card__image"><img src="' + escapeHtml(space.image) + '" alt="" loading="lazy"></span>' +
       '<span class="kliper-business-card__shade"></span>' +
       '<span class="kliper-business-card__top"><span class="kliper-business-card__deal">' + escapeHtml(space.deal) + '</span><span class="kliper-business-card__chip">' + escapeHtml(space.type) + '</span></span>' +
@@ -250,16 +312,19 @@
         '<span class="kliper-business-card__meta"><span>' + escapeHtml(space.district) + '</span><span>' + escapeHtml(space.floor) + '</span><span>' + escapeHtml(space.access) + '</span></span>' +
         '<h3>' + escapeHtml(space.title) + '</h3>' +
         '<p class="kliper-business-card__address">' + escapeHtml(space.address) + '</p>' +
+        (fitTags ? '<span class="kliper-business-card__fit">' + fitTags + '</span>' : '') +
         '<span class="kliper-business-card__facts">' +
-          '<span class="kliper-business-card__fact"><span>Цена</span><strong>' + escapeHtml(space.price) + '</strong></span>' +
-          '<span class="kliper-business-card__fact"><span>Площадь</span><strong>' + escapeHtml(space.area) + ' м²</strong></span>' +
-          '<span class="kliper-business-card__fact"><span>Ставка</span><strong>' + escapeHtml(space.pricePerMeter) + '</strong></span>' +
+          '<span class="kliper-business-card__price"><span>Цена</span><strong>' + escapeHtml(space.price) + '</strong></span>' +
+          '<span class="kliper-business-card__secondary"><span><b>Площадь</b>' + escapeHtml(space.area) + ' м²</span><span><b>Ставка</b>' + escapeHtml(space.pricePerMeter) + '</span></span>' +
         '</span>' +
       '</span>' +
       '<span class="kliper-business-card__footer"><span class="kliper-business-card__badges">' +
-        space.badges.slice(0, 3).map(function (item) { return '<span>' + escapeHtml(item) + '</span>'; }).join('') +
-      '</span><span class="kliper-business-card__cta">Подробнее</span></span>' +
-    '</button>';
+        space.badges.slice(0, 1).map(function (item) { return '<span>' + escapeHtml(item) + '</span>'; }).join('') +
+      '</span><span class="kliper-business-card__actions">' +
+        '<button class="kliper-business-card__save' + (saved ? ' is-saved' : '') + '" type="button" data-business-save="' + escapeHtml(space.id) + '" aria-pressed="' + (saved ? 'true' : 'false') + '">' + (saved ? 'Сохранено' : 'Сохранить') + '</button>' +
+        '<button class="kliper-business-card__cta" type="button" data-business-open="' + escapeHtml(space.id) + '">Подробнее</button>' +
+      '</span></span>' +
+    '</article>';
   }
 
   function viewButton(view, label) {
@@ -304,12 +369,37 @@
     '</div>';
   }
 
+  function renderPreview(space) {
+    if (!space) return '';
+    var saved = isSavedSpace(space.id);
+    return '<aside class="kliper-business-preview" role="dialog" aria-modal="false" aria-label="Быстрый просмотр ' + escapeHtml(space.title) + '">' +
+      '<button class="kliper-business-preview__close" type="button" data-business-preview-close aria-label="Закрыть быстрый просмотр">×</button>' +
+      '<img src="' + escapeHtml(space.image) + '" alt="" loading="lazy">' +
+      '<div class="kliper-business-preview__body">' +
+        '<p class="kliper-business-preview__kicker">' + escapeHtml(space.deal) + ' · ' + escapeHtml(space.type) + '</p>' +
+        '<h3>' + escapeHtml(space.title) + '</h3>' +
+        '<p>' + escapeHtml(space.address) + '</p>' +
+        '<div class="kliper-business-preview__facts">' +
+          '<strong>' + escapeHtml(space.price) + '</strong>' +
+          '<span>' + escapeHtml(space.area) + ' м²</span>' +
+          '<span>' + escapeHtml(space.pricePerMeter) + '</span>' +
+        '</div>' +
+        '<div class="kliper-business-preview__actions">' +
+          '<button type="button" data-business-save="' + escapeHtml(space.id) + '" class="' + (saved ? 'is-saved' : '') + '" aria-pressed="' + (saved ? 'true' : 'false') + '">' + (saved ? 'Сохранено' : 'Сохранить себе') + '</button>' +
+          '<button type="button" data-business-preview-open="' + escapeHtml(space.id) + '">Открыть страницу</button>' +
+        '</div>' +
+      '</div>' +
+    '</aside>';
+  }
+
   function renderList() {
     var host = findHost();
     if (!host) return;
     var items = filteredSpaces();
     var filters = getSelectedFilters();
-    var signature = 'list:' + businessView + ':' + JSON.stringify(filters) + ':' + items.map(function (item) { return item.id; }).join('|');
+    var preview = businessPreviewId && items.filter(function (item) { return item.id === businessPreviewId; })[0];
+    if (businessPreviewId && !preview) businessPreviewId = '';
+    var signature = 'list:' + businessView + ':' + JSON.stringify(filters) + ':' + items.map(function (item) { return item.id; }).join('|') + ':preview:' + businessPreviewId + ':saved:' + readSavedSpaces().join('|');
     if (host.getAttribute('data-business-render-key') === signature) return;
     host.setAttribute('data-business-render-key', signature);
     var content = '';
@@ -325,7 +415,9 @@
         '<p class="kliper-business-count">' + items.length + ' бизнес-помещений</p>' +
         renderViewToggle() +
       '</div>' +
-      content;
+      content +
+      renderPreview(preview);
+    document.dispatchEvent(new CustomEvent('kliper:business-results-rendered'));
   }
 
   function section(title, body) {
@@ -363,18 +455,25 @@
               fact('Парковка', space.parking) +
             '</div>') +
             section('Описание', '<p>' + escapeHtml(space.description) + '</p>') +
+            section('Для какого бизнеса', renderFitTags(space) + '<p class="kliper-business-section-note">Подборка сценариев основана на параметрах объекта: вход, поток, мощность, состояние и окружение.</p>') +
             section('Галерея и состояние', '<div class="kliper-business-gallery">' + space.gallery.map(function (src) { return '<img src="' + escapeHtml(src) + '" alt="">'; }).join('') + '</div>') +
             section('Что важно для бизнеса', '<div class="kliper-business-checks">' +
-              '<div class="kliper-business-check">' + escapeHtml(space.traffic) + '</div>' +
-              '<div class="kliper-business-check">' + escapeHtml(space.condition) + '</div>' +
-              '<div class="kliper-business-check">' + escapeHtml(space.deposit) + '</div>' +
-              '<div class="kliper-business-check">' + escapeHtml(space.payback) + '</div>' +
-              '<div class="kliper-business-check">' + escapeHtml(space.tax) + '</div>' +
-              '<div class="kliper-business-check">' + escapeHtml(space.badges.join(', ')) + '</div>' +
+              check('Поток', space.traffic) +
+              check('Состояние', space.condition) +
+              check('Условия', space.deposit) +
+              check('Налоги', space.tax) +
+              check('Формат', space.badges.join(', ')) +
+              check('Парковка', space.parking) +
             '</div>') +
           '</main>' +
           '<aside class="kliper-business-side">' +
-            '<section class="kliper-business-side-card kliper-business-contact"><h3>Связаться по объекту</h3><div class="kliper-business-contact__price"><strong>' + escapeHtml(space.price) + '</strong><span>' + escapeHtml(space.pricePerMeter) + ' · ' + escapeHtml(space.deposit) + '</span></div><button type="button">Показать телефон</button><p style="margin:10px 0 0;color:#64748b;font-size:13px;font-weight:750;">' + escapeHtml(space.owner) + '<br>' + escapeHtml(space.phone) + '</p></section>' +
+            '<section class="kliper-business-side-card kliper-business-contact"><p class="kliper-business-side-eyebrow">' + escapeHtml(space.deal) + ' · ' + escapeHtml(space.type) + '</p><h3>Связаться по объекту</h3><div class="kliper-business-contact__price"><strong>' + escapeHtml(space.price) + '</strong><span>' + escapeHtml(space.pricePerMeter) + ' · ' + escapeHtml(space.deposit) + '</span></div><button type="button">Показать телефон</button><p class="kliper-business-contact__owner">' + escapeHtml(space.owner) + '<br>' + escapeHtml(space.phone) + '</p><div class="kliper-business-contact__mini"><span>Проверить поток</span><strong>' + escapeHtml(space.traffic) + '</strong></div></section>' +
+            '<section class="kliper-business-side-card"><h3>Коротко об объекте</h3><div class="kliper-business-side-facts">' +
+              '<span><b>Вход</b>' + escapeHtml(space.access) + '</span>' +
+              '<span><b>Потолки</b>' + escapeHtml(space.ceiling) + '</span>' +
+              '<span><b>Мощность</b>' + escapeHtml(space.power) + '</span>' +
+              '<span><b>Состояние</b>' + escapeHtml(space.condition) + '</span>' +
+            '</div></section>' +
             '<section class="kliper-business-side-card"><h3>Похожие помещения</h3>' + similar.map(function (item) {
               return '<button class="kliper-business-mini" type="button" data-business-space-id="' + escapeHtml(item.id) + '"><img src="' + escapeHtml(item.image) + '" alt=""><span><strong>' + escapeHtml(item.title) + '</strong><span>' + escapeHtml(item.price) + ' · ' + escapeHtml(item.area) + ' м²</span></span></button>';
             }).join('') + '</section>' +
@@ -385,6 +484,7 @@
 
   function render() {
     if (requestBusinessRouteActivation()) return;
+    if (Date.now() < suppressBusinessUntil) return;
     if (suppressRender || !isBusinessView()) return;
     var id = currentSpaceId();
     var selected = id && spaces().filter(function (space) { return space.id === id; })[0];
@@ -420,6 +520,14 @@
   document.addEventListener('click', function (event) {
     var tabButton = event.target.closest('button');
     var tabText = tabButton ? (tabButton.textContent || tabButton.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim() : '';
+    if (tabButton && tabButton.getAttribute('aria-label') === 'Моя страница') {
+      suppressBusinessUntil = Date.now() + 2400;
+      closeBusinessDropdowns();
+      restoreCatalogDom();
+      window.setTimeout(restoreCatalogDom, 120);
+      window.setTimeout(restoreCatalogDom, 520);
+      return;
+    }
     if (['Застройщики', 'Новостройки', 'Готовые ЖК'].indexOf(tabText) !== -1) {
       if (softSwitchingCatalogTab) return;
       if (hasBusinessMount() || routeWantsBusiness()) {
@@ -455,14 +563,55 @@
       return;
     }
 
+    var save = event.target.closest('[data-business-save]');
+    if (save) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleSavedSpace(save.getAttribute('data-business-save'));
+      renderList();
+      return;
+    }
+    var open = event.target.closest('[data-business-open]');
+    if (open) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressRender = true;
+      window.location.hash = 'view=business&space=' + encodeURIComponent(open.getAttribute('data-business-open'));
+      suppressRender = false;
+      schedule();
+      return;
+    }
+    var previewOpen = event.target.closest('[data-business-preview-open]');
+    if (previewOpen) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressRender = true;
+      window.location.hash = 'view=business&space=' + encodeURIComponent(previewOpen.getAttribute('data-business-preview-open'));
+      suppressRender = false;
+      schedule();
+      return;
+    }
+    if (event.target.closest('[data-business-preview-close]')) {
+      event.preventDefault();
+      event.stopPropagation();
+      businessPreviewId = '';
+      renderList();
+      return;
+    }
+
     var card = event.target.closest('[data-business-space-id]');
     if (card) {
       event.preventDefault();
       var id = card.getAttribute('data-business-space-id');
-      suppressRender = true;
-      window.location.hash = 'view=business&space=' + encodeURIComponent(id);
-      suppressRender = false;
-      schedule();
+      if (currentSpaceId()) {
+        suppressRender = true;
+        window.location.hash = 'view=business&space=' + encodeURIComponent(id);
+        suppressRender = false;
+        schedule();
+      } else {
+        businessPreviewId = id;
+        renderList();
+      }
       return;
     }
     if (event.target.closest('[data-business-back]')) {
@@ -470,6 +619,7 @@
       suppressRender = true;
       window.location.hash = 'view=business';
       suppressRender = false;
+      businessPreviewId = '';
       schedule();
       return;
     }
@@ -477,6 +627,7 @@
     if (viewButton) {
       event.preventDefault();
       businessView = viewButton.getAttribute('data-business-view') || 'grid';
+      businessPreviewId = '';
       renderList();
       return;
     }
@@ -490,7 +641,15 @@
     }
   }, true);
 
-  window.addEventListener('hashchange', function () { schedule(); });
+  window.addEventListener('hashchange', function () {
+    if (leavingBusinessRoute()) {
+      closeBusinessDropdowns();
+      restoreCatalogDom();
+      businessPreviewId = '';
+      return;
+    }
+    schedule();
+  });
   window.addEventListener('load', function () {
     schedule();
   });
@@ -510,4 +669,12 @@
   } else {
     schedule();
   }
+
+  document.addEventListener('keydown', function (event) {
+    var card = event.target.closest && event.target.closest('.kliper-business-card[data-business-space-id]');
+    if (!card || event.target.closest('button')) return;
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    card.click();
+  });
 })();
