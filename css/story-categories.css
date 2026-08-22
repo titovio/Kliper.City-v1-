@@ -121,21 +121,20 @@ body.kliper-dark-theme.kliper-stories-compact .kliper-category-story-host::after
 }
 
 .kliper-category-story-host__ring > div::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(15, 23, 42, 0.10)),
-    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.12), transparent 58%);
-  mix-blend-mode: soft-light;
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  mix-blend-mode: normal !important;
 }
 
 .kliper-category-story-host__ring > div {
   background: transparent !important;
   padding: 0 !important;
   --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+body #root > div > header [data-kliper-category-stories] .kliper-category-story-host__ring img {
+  box-shadow: none !important;
 }
 
 body.kliper-dark-theme header [data-kliper-category-stories] .kliper-category-story-host__ring {
@@ -858,10 +857,17 @@ body.kliper-dark-theme #root header [data-kliper-category-stories] .kliper-categ
   }
 
   .kliper-story-viewer__card {
-    width: min(430px, 100vw);
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100%;
     border-radius: 0;
     box-shadow: none;
+    transform: none;
+  }
+
+  .kliper-story-viewer__media {
+    transform: none;
   }
 
   .kliper-story-viewer__body {
@@ -870,10 +876,19 @@ body.kliper-dark-theme #root header [data-kliper-category-stories] .kliper-categ
 }
 
 @media (prefers-reduced-motion: reduce) {
+  header,
+  header > div,
+  header [data-kliper-category-stories],
+  .kliper-category-story-host,
+  .kliper-category-story-host__ring,
+  .kliper-category-story-host__ring img,
+  .kliper-story-viewer,
+  .kliper-story-viewer__card,
   .kliper-story-viewer__media,
   .kliper-story-viewer__side,
   .kliper-story-viewer__cta {
-    transition: none;
+    transition: none !important;
+    animation: none !important;
   }
 }
 

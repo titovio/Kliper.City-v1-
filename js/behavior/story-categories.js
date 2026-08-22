@@ -21,6 +21,7 @@
   var storyTopOpenDelta = 0;
   var storyWheelLockUntil = 0;
   var storyViewerWheelLockUntil = 0;
+  var storyViewerAnimations = [];
 
   var categories = [
     {
@@ -332,6 +333,8 @@
   function handleStoryWheel(event) {
     var now = Date.now();
 
+    if (active.category == null && hasBlockingOverlay(event.target)) return;
+
     if (active.category != null) {
       event.preventDefault();
       if (now < storyViewerWheelLockUntil) return;
@@ -376,6 +379,58 @@
     storyTopOpenDelta = 0;
     storyWheelLockUntil = now + STORY_WHEEL_COOLDOWN;
     openViewer(0);
+  }
+
+  function isVisible(node) {
+    if (!node || !node.getBoundingClientRect) return false;
+    var rect = node.getBoundingClientRect();
+    var style = window.getComputedStyle ? window.getComputedStyle(node) : null;
+    return rect.width > 0 && rect.height > 0 && (!style || (style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0'));
+  }
+
+  function hasBlockingOverlay(target) {
+    var selector = '[aria-modal="true"], [role="dialog"], [data-modal], .modal, .drawer, .popover';
+    if (target && target.closest && target.closest(selector + ', .kliper-story-viewer')) {
+      return !target.closest('.kliper-story-viewer');
+    }
+
+    return Array.prototype.slice.call(document.querySelectorAll(selector)).some(function (node) {
+      return !node.closest('.kliper-story-viewer') && isVisible(node);
+    });
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function animateViewerEntrance(viewer) {
+    if (prefersReducedMotion()) return;
+    var motion = window.KLIPER_MOTION;
+    if (!motion || typeof motion.animate !== 'function') return;
+
+    var card = viewer.querySelector('.kliper-story-viewer__card');
+    var sideItems = viewer.querySelectorAll('.kliper-story-viewer__side, .kliper-story-viewer__carousel');
+    var isMobileViewer = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
+    var cardStartTransform = isMobileViewer
+      ? 'translateY(14px) scale(.985)'
+      : 'translate(-50%, -50%) translateY(14px) scale(.985)';
+    var cardEndTransform = isMobileViewer
+      ? 'translateY(0) scale(1)'
+      : 'translate(-50%, -50%) translateY(0) scale(1)';
+
+    storyViewerAnimations.forEach(function (animation) {
+      if (animation && animation.cancel) animation.cancel();
+    });
+    storyViewerAnimations = [];
+
+    try {
+      if (card) {
+        storyViewerAnimations.push(motion.animate(card, { opacity: [0, 1], transform: [cardStartTransform, cardEndTransform] }, { duration: 0.22, ease: 'easeOut' }));
+      }
+      if (sideItems.length) {
+        storyViewerAnimations.push(motion.animate(sideItems, { opacity: [0, 1] }, { duration: 0.18, delay: 0.04, ease: 'easeOut' }));
+      }
+    } catch (error) {}
   }
 
   function handleStoryTouchStart(event) {
@@ -457,6 +512,7 @@
         '<button class="kliper-story-viewer__carousel kliper-story-viewer__carousel--next" type="button" data-story-category-next aria-label="Следующая категория">›</button>' +
       '</section>';
     document.body.appendChild(viewer);
+    animateViewerEntrance(viewer);
   }
 
   function openViewer(index) {
@@ -501,6 +557,10 @@
   function closeViewer() {
     var viewer = document.querySelector('.kliper-story-viewer');
     if (viewer) viewer.remove();
+    storyViewerAnimations.forEach(function (animation) {
+      if (animation && animation.cancel) animation.cancel();
+    });
+    storyViewerAnimations = [];
     active.category = null;
     active.index = 0;
     storyViewerWheelLockUntil = 0;
