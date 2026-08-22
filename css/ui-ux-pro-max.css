@@ -54,6 +54,19 @@ body {
   -webkit-backdrop-filter: blur(22px) saturate(1.2);
 }
 
+body.kliper-object-route-active #root > div > header,
+body.kliper-card-preview-active #root > div > header {
+  z-index: 930 !important;
+}
+
+body.kliper-object-route-active .kliper-object-section-tabs {
+  display: grid !important;
+}
+
+body.kliper-object-route-active .kliper-object-section-tabs__button {
+  display: inline-flex !important;
+}
+
 #root > div > header img {
   box-shadow: 0 14px 30px rgba(124, 58, 237, 0.18) !important;
 }
@@ -544,9 +557,9 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  min-height: 30px !important;
-  border-radius: 10px !important;
-  padding: 0 11px !important;
+  min-height: 28px !important;
+  border-radius: 9px !important;
+  padding: 0 10px !important;
   font-size: 12px !important;
   font-weight: 900 !important;
   line-height: 1 !important;
@@ -554,7 +567,7 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
 }
 
 .kliper-selected-filter-inline__chip {
-  background: rgba(255, 255, 255, 0.72) !important;
+  background: rgba(255, 255, 255, 0.80) !important;
   color: rgba(51, 65, 85, 0.96) !important;
   box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.88) !important;
 }
@@ -566,7 +579,7 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
 
 .kliper-selected-filter-inline__reset {
   margin-left: 2px !important;
-  background: transparent !important;
+  background: rgba(124, 58, 237, 0.08) !important;
   color: #7c3aed !important;
 }
 
@@ -625,31 +638,44 @@ main section:has(button[aria-label="Готовые ЖК"][class*="bg-gradient-to
 }
 
 .kliper-card-counter {
+  display: inline-flex !important;
+  align-items: center !important;
   justify-content: center !important;
+  flex: 0 0 68px !important;
   width: 68px !important;
   min-width: 68px !important;
   max-width: 68px !important;
+  height: 34px !important;
   min-height: 34px !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  line-height: 1 !important;
   box-sizing: border-box !important;
 }
 
 [aria-label^="Открыть карточку"] [class*="h-9"][class*="min-w-12"][class*="items-center"][class*="justify-center"][class*="font-black"] {
+  flex: 0 0 68px !important;
   width: 68px !important;
   min-width: 68px !important;
   max-width: 68px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  line-height: 1 !important;
   box-sizing: border-box !important;
 }
 
 [aria-label^="Открыть карточку"] [class*="bottom-3"] [class*="h-9"][class*="items-center"][class*="justify-center"] {
+  flex: 0 0 68px !important;
   width: 68px !important;
   min-width: 68px !important;
   max-width: 68px !important;
+  height: 34px !important;
+  min-height: 34px !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  line-height: 1 !important;
   box-sizing: border-box !important;
 }
 
@@ -741,6 +767,20 @@ main section:has(button[aria-label="Готовые ЖК"][class*="bg-gradient-to
   [aria-label^="Открыть карточку"] [class*="bottom-3"] svg {
     width: 14px !important;
     height: 14px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  [aria-label^="Открыть карточку"] [data-kliper-card-action],
+  [aria-label^="Открыть карточку"] [class*="h-9"][class*="min-w-12"][class*="items-center"][class*="justify-center"][class*="font-black"],
+  [aria-label^="Открыть карточку"] [class*="bottom-3"] [class*="h-9"][class*="items-center"][class*="justify-center"],
+  .kliper-card-counter {
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    line-height: 1 !important;
   }
 }
 
@@ -853,6 +893,17 @@ body.kliper-dark-theme #root > div > header {
   border-color: rgba(148, 163, 184, 0.16) !important;
 }
 
+body.kliper-dark-theme #root > div > header button[aria-label="Моя страница"] {
+  background: rgba(24, 34, 52, 0.78) !important;
+  color: rgba(248, 250, 252, 0.92) !important;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14) !important;
+}
+
+body.kliper-dark-theme #root > div > header button[aria-label="Моя страница"] > span:first-child:not([class*="bg-violet"]) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(248, 250, 252, 0.88) !important;
+}
+
 body.kliper-dark-theme main .rounded-\[22px\].bg-white,
 body.kliper-dark-theme main article:not([aria-label^="Открыть карточку"]):not(.kliper-business-card),
 body.kliper-dark-theme main aside > div[class*="rounded"] {
@@ -881,9 +932,9 @@ body.kliper-dark-theme #root main section.xl\:col-span-2 > div:has(> div[class*=
 
 body.kliper-dark-theme #root main .kliper-selected-filter-inline__chip {
   border-color: rgba(167, 139, 250, 0.28) !important;
-  background: rgba(24, 34, 52, 0.92) !important;
+  background: rgba(20, 28, 44, 0.82) !important;
   color: rgba(248, 250, 252, 0.9) !important;
-  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.18) !important;
+  box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.10) !important;
 }
 
 body.kliper-dark-theme #root main .kliper-selected-filter-inline__chip:hover {
@@ -897,11 +948,12 @@ body.kliper-dark-theme #root main .kliper-selected-filter-inline__chip strong {
 }
 
 body.kliper-dark-theme #root main .kliper-selected-filter-inline__reset {
+  background: rgba(124, 58, 237, 0.14) !important;
   color: #c4b5fd !important;
 }
 
 body.kliper-dark-theme #root main .kliper-selected-filter-inline__reset:hover {
-  background: rgba(124, 58, 237, 0.16) !important;
+  background: rgba(124, 58, 237, 0.24) !important;
   color: #ede9fe !important;
 }
 
@@ -1080,6 +1132,60 @@ body.kliper-user-page-ready main {
   box-shadow: 0 18px 36px rgba(124, 58, 237, 0.28) !important;
 }
 
+.kliper-user-page-root .kliper-user-page-visual-only {
+  position: relative !important;
+  border: 1px solid rgba(124, 58, 237, 0.18) !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  color: #6d28d9 !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+.kliper-user-page-root .kliper-user-page-visual-only::after {
+  content: "v1";
+  margin-left: 8px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.10);
+  padding: 2px 7px;
+  color: #7c3aed;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.kliper-user-page-root .kliper-user-page-visual-only:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 58, 237, 0.30) !important;
+  background: rgba(245, 243, 255, 0.94) !important;
+  box-shadow: 0 14px 30px rgba(124, 58, 237, 0.12) !important;
+}
+
+.kliper-user-page-root .kliper-user-page-toast {
+  pointer-events: none;
+  position: sticky;
+  bottom: 16px;
+  z-index: 80;
+  margin: 0 auto;
+  width: min(100%, 520px);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.94);
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.24);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.kliper-user-page-root .kliper-user-page-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .kliper-user-page-root .kliper-user-page-tab {
   min-height: 38px !important;
   border-color: rgba(226, 232, 240, 0.78) !important;
@@ -1111,6 +1217,43 @@ body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-tab:hover {
   color: #fff !important;
 }
 
+body.kliper-dark-theme .kliper-user-page-root [class*="bg-white"],
+body.kliper-dark-theme .kliper-user-page-root [class*="bg-slate-50"] {
+  background: rgba(15, 23, 42, 0.78) !important;
+}
+
+body.kliper-dark-theme .kliper-user-page-root [class*="text-slate-950"] {
+  color: rgba(248, 250, 252, 0.96) !important;
+}
+
+body.kliper-dark-theme .kliper-user-page-root [class*="text-slate-800"],
+body.kliper-dark-theme .kliper-user-page-root [class*="text-slate-700"],
+body.kliper-dark-theme .kliper-user-page-root [class*="text-slate-600"] {
+  color: rgba(226, 232, 240, 0.82) !important;
+}
+
+body.kliper-dark-theme .kliper-user-page-root [class*="text-slate-500"],
+body.kliper-dark-theme .kliper-user-page-root [class*="text-slate-400"] {
+  color: rgba(203, 213, 225, 0.72) !important;
+}
+
+body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-visual-only {
+  border-color: rgba(167, 139, 250, 0.28) !important;
+  background: rgba(30, 41, 59, 0.90) !important;
+  color: #ddd6fe !important;
+  box-shadow: 0 14px 32px rgba(2, 6, 23, 0.24) !important;
+}
+
+body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-visual-only::after {
+  background: rgba(167, 139, 250, 0.18);
+  color: #c4b5fd;
+}
+
+body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-toast {
+  background: rgba(2, 6, 23, 0.96);
+  box-shadow: 0 20px 52px rgba(2, 6, 23, 0.38);
+}
+
 @media (max-width: 1279px) {
   .kliper-user-page-root aside {
     position: static;
@@ -1118,6 +1261,41 @@ body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-tab:hover {
 }
 
 @media (max-width: 640px) {
+  #root > div > header > div {
+    row-gap: 6px !important;
+    padding-top: 8px !important;
+    padding-bottom: 6px !important;
+  }
+
+  #root > div > main {
+    gap: 12px !important;
+    padding-top: 12px !important;
+    padding-bottom: 14px !important;
+  }
+
+  #root main section.xl\:col-span-2 {
+    gap: 12px !important;
+  }
+
+  #root main section.xl\:col-span-2 > div {
+    margin-bottom: 10px !important;
+  }
+
+  body.kliper-object-route-active .kliper-standard-card-hero {
+    margin-top: 42px !important;
+  }
+
+  #root main .kliper-card-results-row {
+    gap: 8px !important;
+    margin-top: 2px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .kliper-selected-filter-inline {
+    flex-basis: 100% !important;
+    margin-left: 0 !important;
+  }
+
   .kliper-user-page-root > section {
     gap: 14px !important;
   }
@@ -1127,5 +1305,15 @@ body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-tab:hover {
     width: 100% !important;
     min-height: 42px !important;
     justify-content: center !important;
+  }
+
+  .kliper-user-page-root .kliper-user-page-visual-only::after {
+    margin-left: 6px;
+  }
+
+  .kliper-user-page-root .kliper-user-page-toast {
+    bottom: 10px;
+    width: calc(100vw - 32px);
+    font-size: 12px;
   }
 }
