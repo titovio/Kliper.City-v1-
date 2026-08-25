@@ -79,3 +79,16 @@ Mobile `390x844`:
 Если структура навигации изменится, нужно перепроверить `js/behavior/test-selectors.js`.
 
 Не использовать `data-kliper-testid` для CSS-стилизации.
+
+## Residential list-view
+
+`C-001` закрыт внешним guard-слоем `js/filters/residential-view-controls-guard.js`.
+
+После перехода в `view-list` тесты снова должны находить:
+
+- `[data-kliper-testid="view-grid"]`;
+- `[data-kliper-testid="view-list"]`;
+- `[data-kliper-testid="view-map"]`;
+- `[data-kliper-testid="view-sort-reverse"]`.
+
+Важно: в list-view DOM по-прежнему может содержать legacy-leak карточку, скрытую `residential-list-guard`. Для счетчиков и smoke использовать видимые карточки и `[data-kliper-testid="result-count"]`.

@@ -52,6 +52,44 @@ v1 должна быть стабильной витриной продукта.
 - Мой двор.
 - Районы как полноценная отдельная страница.
 
+## Отдельно: ролевые профили, теги любимого и `Профиль автора`
+
+Решение владельца от 2026-07-08: role profiles утверждены как future-state, но не добавляются в текущий v1 UI.
+
+Утверждено:
+
+- CTA для future-state: `Стать автором или специалистом`;
+- тариф физлица: `Профиль автора`, гипотеза `990 ₽ / мес`;
+- ordinary user не создает stories/news/pro-публикации;
+- личные действия private by default, наружу только агрегаты и явно опубликованные рецензии;
+- favorite tags стартуют со стандартных тегов, custom tags позже после moderation;
+- `Почему советуют` - будущий блок из 3 рецензий, материалы компании/партнеров отдельно от organic top;
+- `Представитель компании` не смешивается с кабинетом компании: публичная роль физлица и company membership остаются разными слоями.
+
+В текущем v1 нельзя кодить:
+
+- CTA `Стать автором или специалистом`;
+- role-profile UI;
+- тариф физлица и оплату;
+- role stories;
+- user stories/news;
+- реальные favorite-tag aggregates;
+- блок `Почему советуют`;
+- role/trust badges;
+- permissions/trust/billing через localStorage.
+
+Финал v1 после backend/auth может подготовить foundation:
+
+- server-side likes/subscriptions/reviews;
+- privacy/visibility;
+- review author context;
+- moderation status;
+- verification status;
+- favorite tags base;
+- separation of `user profile`, `role profile`, `company cabinet`.
+
+Основной role-profile UI относится к v2.
+
 ## Отдельно: кабинет компании
 
 Решение владельца от 2026-07-06: кабинет компании входит в v1.

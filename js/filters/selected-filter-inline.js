@@ -17,6 +17,21 @@
     return Array.prototype.slice.call(list || []);
   }
 
+  function isBusinessMode() {
+    if (document.querySelector('.kliper-biz-bar, [data-business-spaces-host], .kliper-business-page')) return true;
+    return toArray(document.querySelectorAll('h1, h2')).some(function (node) {
+      return cleanText(node) === 'Для бизнеса';
+    });
+  }
+
+  function detachSharedInlineBox() {
+    sourceRow = null;
+    if (inlineBox && inlineBox.parentElement && !inlineBox.classList.contains('kliper-biz-selected-inline')) {
+      inlineBox.parentElement.removeChild(inlineBox);
+    }
+    inlineBox = null;
+  }
+
   function findCountEl() {
     var byId = document.getElementById('kliper-card-count');
     if (byId) return byId;
@@ -52,6 +67,11 @@
   }
 
   function hideSelectedSourceRows() {
+    if (isBusinessMode()) {
+      detachSharedInlineBox();
+      return [];
+    }
+
     var rows = toArray(document.querySelectorAll('main div')).filter(isSelectedRowCandidate);
     rows.forEach(function (row) {
       row.classList.add('kliper-selected-filter-source-hidden');
@@ -96,6 +116,11 @@
   }
 
   function sync() {
+    if (isBusinessMode()) {
+      detachSharedInlineBox();
+      return;
+    }
+
     var countEl = findCountEl();
     var row = findSelectedRow();
     if (!countEl || !row) return;

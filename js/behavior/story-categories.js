@@ -289,10 +289,6 @@
 
   function revealStoriesFromTopIntent() {
     if (storyExpanded || !atPageTop()) return false;
-    if (!storyTopRevealReady) {
-      armStoryTopReveal();
-      return false;
-    }
 
     storyExpanded = true;
     storyTopOpenDelta = 0;
@@ -487,7 +483,7 @@
     );
   }
 
-  function renderViewer() {
+  function renderViewer(animateEntrance) {
     var category = categories[active.category];
     if (!category) return;
     var slide = category.slides[active.index] || category.slides[0];
@@ -512,13 +508,13 @@
         '<button class="kliper-story-viewer__carousel kliper-story-viewer__carousel--next" type="button" data-story-category-next aria-label="Следующая категория">›</button>' +
       '</section>';
     document.body.appendChild(viewer);
-    animateViewerEntrance(viewer);
+    if (animateEntrance) animateViewerEntrance(viewer);
   }
 
   function openViewer(index) {
     active.category = index;
     active.index = 0;
-    renderViewer();
+    renderViewer(true);
   }
 
   function nextSlide() {

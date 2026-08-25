@@ -8,20 +8,20 @@
   var CHEVRON_SVG = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>';
 
   var FALLBACK_IMAGES = [
-    'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1460317442991-0ec209397118?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1494522358652-f30e61a60313?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1515263487990-61b07816b324?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=800&auto=format&fit=crop'
+    './assets/images/jk/brusnika__rechnoy_port_cover_4x3.webp',
+    './assets/images/jk/enko__ayvazovskiy_city_cover_4x3.webp',
+    './assets/images/jk/gk_korney__korney_cover_4x3.webp',
+    './assets/images/jk/dk_harizmy__akvatoriya_cover_4x3.webp',
+    './assets/images/jk/strana__semya_cover_4x3.webp',
+    './assets/images/jk/midgard_rus__midgard_na_uezdnoy_cover_4x3.webp',
+    './assets/images/jk/psk_dom_development__da_kvartal_central_cover_4x3.webp',
+    './assets/images/jk/inko__ariya_cover_4x3.webp',
+    './assets/images/jk/gk_tis__dok_cover_4x3.webp',
+    './assets/images/jk/gk_sever__airis_cover_4x3.webp',
+    './assets/images/jk/tyumenskaya_dsk__novo_patrushevo_cover_4x3.webp',
+    './assets/images/jk/pik__ozernyy_park_rerender_cover_4x3.webp',
+    './assets/images/jk/etalon__finskiy_zaliv_cover_4x3.webp',
+    './assets/images/jk/gk_partner__skandia_kvartal_u_ozera_cover_4x3.webp'
   ];
 
   function getBuildingImage(b) {
@@ -83,9 +83,23 @@
     var filtered;
 
     if (viewType === 'novostroyki') {
-      filtered = buildings.filter(function (b) { return b.status !== 'сдан' && b.status !== 'готов'; });
+      filtered = buildings.filter(function (b) {
+        return !b.isCompletedResidentialProject &&
+          !b.isReadyResidential &&
+          b.projectReadinessStatus !== 'completed' &&
+          b.readinessStatus !== 'ready' &&
+          b.status !== 'сдан' &&
+          b.status !== 'готов';
+      });
     } else if (viewType === 'gotovye') {
-      filtered = buildings.filter(function (b) { return b.status === 'сдан' || b.status === 'готов'; });
+      filtered = buildings.filter(function (b) {
+        return b.isCompletedResidentialProject ||
+          b.isReadyResidential ||
+          b.projectReadinessStatus === 'completed' ||
+          b.readinessStatus === 'ready' ||
+          b.status === 'сдан' ||
+          b.status === 'готов';
+      });
     } else if (viewType === 'business') {
       filtered = buildings.filter(function (b) { return b.tags && b.tags.indexOf('коммерция') !== -1; });
     } else {

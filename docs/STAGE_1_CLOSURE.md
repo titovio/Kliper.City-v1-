@@ -37,6 +37,7 @@
 | Автономный протокол | готово | `AUTONOMY_PROTOCOL.md` |
 | Промпты рабочих чатов | готово | `WORKSTREAM_PROMPTS.md` |
 | Baseline regression | готово | `BASELINE_REGRESSION_REPORT.md` |
+| Visual/Catalog QA report | готово | `VISUAL_QA_REPORT.md` |
 | Кабинет компании как будущий домен | готово | `pages-company-cabinet.md` |
 | Архив документации | готово | `kliper-city-docs-package.zip` |
 | Базовая test infrastructure | готово | `TEST_INFRASTRUCTURE.md` |

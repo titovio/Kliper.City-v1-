@@ -1,0 +1,308 @@
+#kliper-business-pricing-root {
+  display: none;
+}
+
+body.kliper-business-pricing-active {
+  overflow: hidden;
+}
+
+body.kliper-business-pricing-active #root {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body.kliper-business-pricing-active #kliper-business-pricing-root {
+  display: block;
+}
+
+.kliper-business-pricing {
+  position: fixed;
+  inset: 0;
+  z-index: 990;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 82% 8%, rgba(43, 188, 211, .16), transparent 32rem),
+    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+  color: #0f172a;
+  font-family: inherit;
+}
+
+.kliper-business-pricing *,
+.kliper-business-pricing *::before,
+.kliper-business-pricing *::after {
+  box-sizing: border-box;
+}
+
+.kliper-business-pricing-hero,
+.kliper-business-pricing-grid,
+.kliper-business-pricing-notes {
+  width: min(1480px, 100%);
+  margin: 0 auto;
+}
+
+.kliper-business-pricing-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.kliper-business-pricing-hero p {
+  margin: 0 0 14px;
+  color: #6d3df5;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.kliper-business-pricing-hero h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(42px, 5vw, 64px);
+  line-height: .98;
+  letter-spacing: 0;
+}
+
+.kliper-business-pricing-hero span {
+  display: block;
+  max-width: 780px;
+  margin-top: 14px;
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.kliper-business-pricing-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.kliper-business-pricing-actions button,
+.kliper-business-pricing-card button {
+  appearance: none;
+  min-height: 44px;
+  border: 1px solid rgba(109, 61, 245, .24);
+  border-radius: 8px;
+  background: #fff;
+  color: #4f2bdd;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.kliper-business-pricing-actions button:first-child,
+.kliper-business-pricing-card button {
+  border-color: transparent;
+  background: linear-gradient(135deg, #7c3cff, #20a7c8);
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(109, 61, 245, .22);
+}
+
+.kliper-business-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.kliper-business-pricing-card {
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .94);
+  padding: 26px 24px 22px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, .08);
+}
+
+.kliper-business-pricing-card.is-featured {
+  border-color: rgba(109, 61, 245, .56);
+  box-shadow: 0 22px 54px rgba(109, 61, 245, .16);
+}
+
+.kliper-business-pricing-card__badge {
+  align-self: flex-end;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  background: rgba(109, 61, 245, .12);
+  color: #5b35ff;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.kliper-business-pricing-card h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 27px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.kliper-business-pricing-price {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.kliper-business-pricing-price strong {
+  color: #0f172a;
+  font-size: clamp(34px, 3vw, 44px);
+  line-height: .95;
+}
+
+.kliper-business-pricing-price span,
+.kliper-business-pricing-card p {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.kliper-business-pricing-card p {
+  min-height: 38px;
+  margin: 0;
+  color: #6d3df5;
+}
+
+.kliper-business-pricing-card ul {
+  display: grid;
+  gap: 13px;
+  margin: 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(15, 23, 42, .12);
+  list-style: none;
+}
+
+.kliper-business-pricing-card li {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.kliper-business-pricing-card li span {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #5b35ff;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.kliper-business-pricing-card button {
+  width: 100%;
+  margin-top: auto;
+}
+
+.kliper-business-pricing-card button[aria-disabled="true"] {
+  opacity: .72;
+  cursor: default;
+}
+
+.kliper-business-pricing-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 28px;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .9);
+  padding: 18px;
+}
+
+.kliper-business-pricing-notes span {
+  color: #334155;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+body.kliper-dark-theme .kliper-business-pricing,
+html.kliper-dark-theme .kliper-business-pricing {
+  background:
+    radial-gradient(circle at 82% 8%, rgba(43, 188, 211, .2), transparent 32rem),
+    linear-gradient(180deg, #070c18 0%, #0d1726 100%);
+  color: #f8fafc;
+}
+
+body.kliper-dark-theme .kliper-business-pricing-hero h1,
+body.kliper-dark-theme .kliper-business-pricing-card h2,
+body.kliper-dark-theme .kliper-business-pricing-price strong,
+html.kliper-dark-theme .kliper-business-pricing-hero h1,
+html.kliper-dark-theme .kliper-business-pricing-card h2,
+html.kliper-dark-theme .kliper-business-pricing-price strong {
+  color: #f8fafc;
+}
+
+body.kliper-dark-theme .kliper-business-pricing-card,
+body.kliper-dark-theme .kliper-business-pricing-notes,
+html.kliper-dark-theme .kliper-business-pricing-card,
+html.kliper-dark-theme .kliper-business-pricing-notes {
+  border-color: rgba(148, 163, 184, .18);
+  background: rgba(15, 23, 42, .9);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, .25);
+}
+
+body.kliper-dark-theme .kliper-business-pricing-hero span,
+body.kliper-dark-theme .kliper-business-pricing-price span,
+body.kliper-dark-theme .kliper-business-pricing-card li,
+body.kliper-dark-theme .kliper-business-pricing-notes span,
+html.kliper-dark-theme .kliper-business-pricing-hero span,
+html.kliper-dark-theme .kliper-business-pricing-price span,
+html.kliper-dark-theme .kliper-business-pricing-card li,
+html.kliper-dark-theme .kliper-business-pricing-notes span {
+  color: #a8b3c7;
+}
+
+@media (max-width: 1280px) {
+  .kliper-business-pricing-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  html:has(body.kliper-business-pricing-active) {
+    overflow: hidden;
+  }
+
+  .kliper-business-pricing {
+    padding: 14px;
+    min-width: 0;
+  }
+
+  .kliper-business-pricing-hero {
+    flex-direction: column;
+  }
+
+  .kliper-business-pricing-actions,
+  .kliper-business-pricing-actions button {
+    width: 100%;
+  }
+
+  .kliper-business-pricing-grid,
+  .kliper-business-pricing-notes {
+    grid-template-columns: 1fr;
+  }
+
+  .kliper-business-pricing-card {
+    min-height: auto;
+  }
+}

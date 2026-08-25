@@ -12,6 +12,10 @@
     return div.innerHTML;
   }
 
+  function shouldUseAvatarImage(src) {
+    return src && src.indexOf('google.com/s2/favicons') === -1;
+  }
+
   function renderCard(dev) {
     var badges = '';
     if (dev.activeJK > 0) {
@@ -22,7 +26,7 @@
     }
 
     var avatarInner = '';
-    if (dev.avatar) {
+    if (shouldUseAvatarImage(dev.avatar)) {
       avatarInner = '<div class="kliper-card-avatar-inner"><img src="' + escapeHtml(dev.avatar) + '" alt="' + escapeHtml(dev.name) + '" loading="lazy"></div>';
     } else {
       var letter = dev.name.charAt(0).toUpperCase();

@@ -7,6 +7,11 @@
   --uxpm-cyan: #0ea5b7;
   --uxpm-surface: rgba(255, 255, 255, 0.88);
   --uxpm-shadow: 0 20px 60px rgba(15, 23, 42, 0.10);
+  --uxpm-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --uxpm-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --uxpm-duration-fast: 220ms;
+  --uxpm-duration-base: 320ms;
+  --uxpm-duration-slow: 420ms;
 }
 
 @keyframes uxpm-catalog-filter-enter {
@@ -92,11 +97,15 @@ body.kliper-object-route-active .kliper-object-section-tabs__button {
 }
 
 #root > div > header button {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  transition:
+    transform var(--uxpm-duration-base) var(--uxpm-ease-out),
+    box-shadow var(--uxpm-duration-base) var(--uxpm-ease-out),
+    background-color var(--uxpm-duration-base) var(--uxpm-ease-out);
+  will-change: transform;
 }
 
 #root > div > header button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-0.5px);
 }
 
 main {
@@ -186,7 +195,12 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
 [aria-label^="Открыть карточку"] {
   border: 1px solid rgba(255, 255, 255, 0.42) !important;
   box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12) !important;
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  transition:
+    transform var(--uxpm-duration-slow) var(--uxpm-ease-soft),
+    box-shadow var(--uxpm-duration-slow) var(--uxpm-ease-soft),
+    border-color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    filter var(--uxpm-duration-base) var(--uxpm-ease-out);
+  will-change: transform;
 }
 
 [aria-label^="Открыть карточку"] div:has(> .kliper-developer-card-status-badges) {
@@ -419,7 +433,11 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
   font-size: 13px !important;
   font-weight: 900 !important;
   cursor: pointer !important;
-  transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease !important;
+  transition:
+    border-color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    background-color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    box-shadow var(--uxpm-duration-base) var(--uxpm-ease-out) !important;
   backdrop-filter: blur(12px) saturate(1.08) !important;
   -webkit-backdrop-filter: blur(12px) saturate(1.08) !important;
 }
@@ -486,7 +504,10 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
 
 .kliper-newbuild-fast-option {
   cursor: pointer !important;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+  transition:
+    background var(--uxpm-duration-fast) var(--uxpm-ease-out),
+    border-color var(--uxpm-duration-fast) var(--uxpm-ease-out),
+    color var(--uxpm-duration-fast) var(--uxpm-ease-out) !important;
 }
 
 .kliper-newbuild-fast-option:hover,
@@ -589,9 +610,10 @@ main .rounded-\[22px\].bg-white [class*="border-b"] {
 }
 
 [aria-label^="Открыть карточку"]:hover {
-  transform: translateY(-3px);
+  transform: translateY(-1.5px);
   border-color: rgba(124, 58, 237, 0.32) !important;
-  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.18) !important;
+  box-shadow: 0 24px 62px rgba(15, 23, 42, 0.16) !important;
+  filter: saturate(1.02);
 }
 
 main section:has(button[aria-label="Новостройки"][class*="bg-gradient-to-br"]) > div:first-child,
@@ -813,7 +835,11 @@ main section:has(button[aria-label="Готовые ЖК"][class*="bg-gradient-to
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.055) !important;
   backdrop-filter: blur(12px) saturate(1.08) !important;
   -webkit-backdrop-filter: blur(12px) saturate(1.08) !important;
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
+  transition:
+    border-color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    background-color var(--uxpm-duration-base) var(--uxpm-ease-out),
+    box-shadow var(--uxpm-duration-base) var(--uxpm-ease-out) !important;
 }
 
 .kliper-biz-trigger:hover,
@@ -1123,11 +1149,15 @@ body.kliper-user-page-ready main {
   color: #fff !important;
   font-weight: 900 !important;
   box-shadow: 0 14px 30px rgba(124, 58, 237, 0.24) !important;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+  transition:
+    transform var(--uxpm-duration-base) var(--uxpm-ease-out),
+    box-shadow var(--uxpm-duration-base) var(--uxpm-ease-out),
+    filter var(--uxpm-duration-base) var(--uxpm-ease-out) !important;
+  will-change: transform;
 }
 
 .kliper-user-page-root .kliper-user-page-cta:hover {
-  transform: translateY(-1px);
+  transform: translateY(-0.5px);
   filter: saturate(1.05);
   box-shadow: 0 18px 36px rgba(124, 58, 237, 0.28) !important;
 }
@@ -1154,7 +1184,7 @@ body.kliper-user-page-ready main {
 }
 
 .kliper-user-page-root .kliper-user-page-visual-only:hover {
-  transform: translateY(-1px);
+  transform: translateY(-0.5px);
   border-color: rgba(124, 58, 237, 0.30) !important;
   background: rgba(245, 243, 255, 0.94) !important;
   box-shadow: 0 14px 30px rgba(124, 58, 237, 0.12) !important;
@@ -1178,7 +1208,9 @@ body.kliper-user-page-ready main {
   box-shadow: 0 18px 46px rgba(15, 23, 42, 0.24);
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition:
+    opacity var(--uxpm-duration-base) var(--uxpm-ease-out),
+    transform var(--uxpm-duration-base) var(--uxpm-ease-out);
 }
 
 .kliper-user-page-root .kliper-user-page-toast.is-visible {
@@ -1252,6 +1284,24 @@ body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-visual-only::aft
 body.kliper-dark-theme .kliper-user-page-root .kliper-user-page-toast {
   background: rgba(2, 6, 23, 0.96);
   box-shadow: 0 20px 52px rgba(2, 6, 23, 0.38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #root *,
+  #root *::before,
+  #root *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  [aria-label^="Открыть карточку"]:hover,
+  #root > div > header button:hover,
+  .kliper-user-page-root .kliper-user-page-cta:hover,
+  .kliper-user-page-root .kliper-user-page-visual-only:hover {
+    transform: none !important;
+  }
 }
 
 @media (max-width: 1279px) {

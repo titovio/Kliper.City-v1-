@@ -258,14 +258,28 @@
   function openStoryForTopCard(title, sourceButton) {
     const fallback = document.createElement('div');
     fallback.className = 'kliper-top-story-fallback';
-    fallback.innerHTML = `
-      <div class="kliper-top-story-card">
-        <button type="button" class="kliper-top-story-close" aria-label="Закрыть">×</button>
-        <p>Stories</p>
-        <h3>${title}</h3>
-        <span>История карточки откроется здесь, когда stories будут привязаны к этой компании.</span>
-      </div>
-    `;
+
+    const card = document.createElement('div');
+    card.className = 'kliper-top-story-card';
+
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'kliper-top-story-close';
+    close.setAttribute('aria-label', 'Закрыть');
+    close.textContent = '×';
+
+    const label = document.createElement('p');
+    label.textContent = 'Stories';
+
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+
+    const hint = document.createElement('span');
+    hint.textContent = 'История карточки откроется здесь, когда stories будут привязаны к этой компании.';
+
+    card.append(close, label, heading, hint);
+    fallback.appendChild(card);
+
     fallback.addEventListener('click', (event) => {
       if (event.target === fallback || event.target.closest('.kliper-top-story-close')) fallback.remove();
     });

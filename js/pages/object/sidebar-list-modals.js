@@ -112,10 +112,13 @@
 
   function openModal(kind) {
     var isSubscribers = kind === 'subscribers';
-    var title = isSubscribers ? 'Все подписчики' : 'Все рекомендации';
+    var isReviews = kind === 'reviews';
+    var title = isSubscribers ? 'Все подписчики' : (isReviews ? 'Все рецензии' : 'Все рекомендации');
     var subtitle = isSubscribers
       ? 'Люди, которые следят за обновлениями ' + getPageTitle() + '.'
-      : 'Отзывы и причины, почему жители советуют ' + getPageTitle() + '.';
+      : (isReviews
+        ? 'Рецензии жителей и пользователей по ' + getPageTitle() + '.'
+        : 'Отзывы и причины, почему жители советуют ' + getPageTitle() + '.');
     var content = isSubscribers ? renderSubscribers() : renderRecommendations();
 
     var root = getRoot();
@@ -160,7 +163,7 @@
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    openModal(label === 'Все подписчики' ? 'subscribers' : 'recommendations');
+    openModal(label === 'Все подписчики' ? 'subscribers' : (label === 'Все рецензии' ? 'reviews' : 'recommendations'));
   }, true);
 
   document.addEventListener('keydown', function (event) {

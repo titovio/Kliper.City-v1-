@@ -34,6 +34,17 @@
       style.opacity !== '0';
   }
 
+  function isRendered(node) {
+    if (!node || !node.getBoundingClientRect) return false;
+    var rect = node.getBoundingClientRect();
+    var style = window.getComputedStyle(node);
+    return rect.width > 0 &&
+      rect.height > 0 &&
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      style.opacity !== '0';
+  }
+
   function clearManagedAttributes() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-kliper-testid]'), function (node) {
       if (node.getAttribute('data-kliper-testid-managed') === 'true') {
@@ -89,19 +100,59 @@
     };
     Array.prototype.forEach.call(document.querySelectorAll('button[aria-label]'), function (button) {
       var id = map[button.getAttribute('aria-label')];
-      if (!id || !isVisibleInViewport(button)) return;
+      if (!id || !isRendered(button)) return;
       button.setAttribute('data-kliper-testid', id);
       button.setAttribute('data-kliper-testid-managed', 'true');
     });
   }
 
+  function cardWord(count) {
+    var lastTwo = count % 100;
+    var last = count % 10;
+    if (lastTwo >= 11 && lastTwo <= 14) return 'карточек';
+    if (last === 1) return 'карточка';
+    if (last >= 2 && last <= 4) return 'карточки';
+    return 'карточек';
+  }
+
+  function normalizeCountWording() {
+    Array.prototype.forEach.call(document.querySelectorAll('p, div, span'), function (node) {
+      if (node.children && node.children.length) return;
+      var text = clean(node.textContent);
+      var match = /^(\d+)\s+карточки$/.exec(text);
+      if (!match) return;
+      var count = Number(match[1]);
+      node.textContent = count + ' ' + cardWord(count);
+    });
+  }
+
   function markCounts() {
+    normalizeCountWording();
     var countNodes = Array.prototype.filter.call(document.querySelectorAll('p, div, span'), function (node) {
       var text = clean(node.textContent);
-      return /^\d+\s+(карточки|бизнес-помещений)(\s|$)/.test(text) &&
+      return /^\d+\s+(карточка|карточки|карточек|бизнес-помещений)(\s|$)/.test(text) &&
         text.length <= 80 &&
         isVisibleInViewport(node);
     });
+    var viewAnchor = document.querySelector('[data-kliper-testid="view-grid"]');
+    if (viewAnchor && isVisibleInViewport(viewAnchor)) {
+      var anchorRect = viewAnchor.getBoundingClientRect();
+      var anchorY = anchorRect.top + anchorRect.height / 2;
+      countNodes.sort(function (a, b) {
+        var ar = a.getBoundingClientRect();
+        var br = b.getBoundingClientRect();
+        var ay = ar.top + ar.height / 2;
+        var by = br.top + br.height / 2;
+        return Math.abs(ay - anchorY) - Math.abs(by - anchorY) ||
+          ar.top - br.top ||
+          clean(a.textContent).length - clean(b.textContent).length;
+      });
+      var anchoredCountNode = countNodes[0];
+      if (!anchoredCountNode) return;
+      anchoredCountNode.setAttribute('data-kliper-testid', 'result-count');
+      anchoredCountNode.setAttribute('data-kliper-testid-managed', 'true');
+      return;
+    }
     countNodes.sort(function (a, b) {
       return clean(a.textContent).length - clean(b.textContent).length;
     });
